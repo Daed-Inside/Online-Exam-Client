@@ -7,6 +7,7 @@ import {
 import Login from "../features/login/login";
 import SignUp from "../features/signup/signup";
 import NavBar from "../features/layout/navbar/navbar";
+import Footer from "../features/layout/footer/footer";
 import * as React from "react";
 
 function Routings({ children, ...renderProps }) {
@@ -45,6 +46,7 @@ function AdminRouting({ children, ...props }) {
           <Routes>{children}</Routes>
         </Router>
       </body>
+      <Footer />
     </>
   );
 }
