@@ -4,6 +4,29 @@ import { Link } from "react-router-dom";
 import ImageStudy from "../../assets/images/login_test_image.png";
 import { SignUpSchema } from "../../constants/validation";
 import { FormikError } from "../../components/FormikError/FormikError.js";
+import axios from 'axios';
+
+function handleSubmit(values) {
+
+  const body = {
+    email: values.email,
+    username: values.email,
+    password: values.password,
+    firstname: 'Khiem',
+    lastname: 'Pham'
+  };
+
+  axios.post(`http://localhost:8310/keycloak-service/createUser`, body )
+  .then(res => {
+    console.log(res);
+    console.log(res.data);
+    setTimeout(() => {
+      alert('create success');
+    }, 400)
+  }).catch(error => {
+    console.log(error)
+  })
+}
 
 function SignUp() {
   return (
@@ -26,12 +49,7 @@ function SignUp() {
                 address: "",
               }}
               validationSchema={SignUpSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  setSubmitting(false);
-                }, 400);
-              }}
+              onSubmit={(values, { setSubmitting }) => handleSubmit(values)}
             >
               {({
                 isSubmitting,

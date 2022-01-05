@@ -4,6 +4,32 @@ import { Link } from "react-router-dom";
 import ImageStudy from "../../assets/images/login_test_image.png";
 import { FormikError } from "../../components/FormikError/FormikError.js";
 import { SignInSchema } from "../../constants/validation";
+import axios from 'axios';
+
+function handleSubmit(values) {
+
+  const body = {
+    email: values.email,
+    password: values.password
+  };
+
+  axios.post(`http://localhost:8310/keycloak-service/login`, body, {
+    headers: {"Access-Control-Allow-Origin": "*"
+  }
+  } )
+  .then(res => {
+    console.log(res);
+    console.log(res.data);
+    setTimeout(() => {
+      alert('Login success');
+    }, 400)
+  }).catch(error => {
+    console.log(error)
+    setTimeout(() => {
+      alert(error);
+    }, 400)
+  })
+}
 
 function Login() {
   return (
@@ -20,12 +46,7 @@ function Login() {
             <Formik
               initialValues={{ email: "", password: "" }}
               validationSchema={SignInSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  setSubmitting(false);
-                }, 400);
-              }}
+              onSubmit={(values, { setSubmitting }) => handleSubmit(values)}
             >
               {({
                 isSubmitting,
