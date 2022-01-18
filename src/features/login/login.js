@@ -4,31 +4,29 @@ import { Link } from "react-router-dom";
 import ImageStudy from "../../assets/images/login_test_image.png";
 import { FormikError } from "../../components/FormikError/FormikError.js";
 import { SignInSchema } from "../../constants/validation";
-import axios from 'axios';
+import axios from "axios";
 
 function handleSubmit(values) {
-
   const body = {
     email: values.email,
-    password: values.password
+    password: values.password,
   };
 
-  axios.post(`http://localhost:8310/keycloak-service/login`, body, {
-    headers: {"Access-Control-Allow-Origin": "*"
-  }
-  } )
-  .then(res => {
-    console.log(res);
-    console.log(res.data);
-    setTimeout(() => {
-      alert('Login success');
-    }, 400)
-  }).catch(error => {
-    console.log(error)
-    setTimeout(() => {
-      alert(error);
-    }, 400)
-  })
+  axios
+    .post(`http://localhost:8310/keycloak-service/login`, body)
+    .then((res) => {
+      console.log(res);
+      console.log(res.data);
+      setTimeout(() => {
+        alert("Login success");
+      }, 400);
+    })
+    .catch((error) => {
+      console.log(error);
+      setTimeout(() => {
+        alert(error);
+      }, 400);
+    });
 }
 
 function Login() {
@@ -65,7 +63,11 @@ function Login() {
                       name="email"
                       placeholder="Email"
                     />
-                    {errors.email && touched.email ? FormikError(errors, "email") : <div />}
+                    {errors.email && touched.email ? (
+                      FormikError(errors, "email")
+                    ) : (
+                      <div />
+                    )}
                   </div>
                   {/* <ErrorMessage name="email" component="div" /> */}
                   <div className="input-section">

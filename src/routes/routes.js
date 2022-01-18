@@ -4,10 +4,12 @@ import {
   Navigate,
   Routes,
 } from "react-router-dom";
+import "./routes.css";
 import Login from "../features/login/login";
 import SignUp from "../features/signup/signup";
 import NavBar from "../features/layout/navbar/navbar";
 import Footer from "../features/layout/footer/footer";
+import MyTest from "../features/mytest/mytest";
 import * as React from "react";
 
 function Routings({ children, ...renderProps }) {
@@ -17,6 +19,7 @@ function Routings({ children, ...renderProps }) {
       {isLogin === true ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/MyTest" element={<MyTest />} />
           <Route
             path="/dashboard"
             element={
@@ -40,13 +43,17 @@ function Routings({ children, ...renderProps }) {
 function AdminRouting({ children, ...props }) {
   return (
     <>
-      <NavBar />
-      <body>
-        <Router>
-          <Routes>{children}</Routes>
-        </Router>
-      </body>
-      <Footer />
+      <div className="full-wrap-content">
+        <NavBar />
+        {/* <body className="body-background"> */}
+          <div className="body-background">
+          <Router>
+            <Routes>{children}</Routes>
+          </Router>
+        {/* </body> */}
+        </div>
+        <Footer />
+      </div>
     </>
   );
 }
