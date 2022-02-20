@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import QuestionAns from "./components/question";
 import Button from "@mui/material/Button";
-import { onChangeFormName, onChangeTime } from "./libs/functions";
+import { onChangeFormValue, onChangeTime } from "./libs/functions";
 import { selectType } from "./components/selectTypeConfig";
 
 function CreateTest() {
@@ -21,7 +21,7 @@ function CreateTest() {
             variant="standard"
             value={formData.title}
             onChange={(e) => {
-              onChangeFormName(e.target.value, formData, setFormData);
+              onChangeFormValue("title", e.target.value, formData, setFormData);
             }}
             style={{ height: 50, width: "100%" }}
             InputLabelProps={{
@@ -67,7 +67,12 @@ function CreateTest() {
             label="Chọn môn"
             value={formData.subject}
             onChange={(e) => {
-              //handleChangeType(e.target.value, el.id, formData, setFormData);
+              onChangeFormValue(
+                "subject",
+                e.target.value,
+                formData,
+                setFormData
+              );
             }}
             SelectProps={{
               native: true,
@@ -80,6 +85,93 @@ function CreateTest() {
               </option>
             ))}
           </TextField>
+
+          <TextField
+            id="easyQuest"
+            type={"number"}
+            placeholder="Chọn số câu dễ"
+            variant="standard"
+            value={formData.easyQuest}
+            onChange={(e) => {
+              onChangeFormValue(
+                "easyQuest",
+                e.target.value,
+                formData,
+                setFormData
+              );
+            }}
+            style={{ height: 50, width: "100%" }}
+            InputLabelProps={{
+              style: {
+                height: 50,
+                ...{ top: `50px` },
+              },
+            }}
+            inputProps={{
+              style: {
+                height: 50,
+                fontSize: "1.5rem",
+              },
+            }}
+          />
+
+          <TextField
+            id="mediumQuest"
+            type={"number"}
+            placeholder="Chọn số câu bình thường"
+            variant="standard"
+            value={formData.mediumQuest}
+            onChange={(e) => {
+              onChangeFormValue(
+                "mediumQuest",
+                e.target.value,
+                formData,
+                setFormData
+              );
+            }}
+            style={{ height: 50, width: "100%" }}
+            InputLabelProps={{
+              style: {
+                height: 50,
+                ...{ top: `50px` },
+              },
+            }}
+            inputProps={{
+              style: {
+                height: 50,
+                fontSize: "1.5rem",
+              },
+            }}
+          />
+
+          <TextField
+            id="hardQuest"
+            type={"number"}
+            placeholder="Chọn số câu khó"
+            variant="standard"
+            value={formData.hardQuest}
+            onChange={(e) => {
+              onChangeFormValue(
+                "hardQuest",
+                e.target.value,
+                formData,
+                setFormData
+              );
+            }}
+            style={{ height: 50, width: "100%" }}
+            InputLabelProps={{
+              style: {
+                height: 50,
+                ...{ top: `50px` },
+              },
+            }}
+            inputProps={{
+              style: {
+                height: 50,
+                fontSize: "1.5rem",
+              },
+            }}
+          />
         </div>
         {formData?.data?.map((el, index) => (
           <QuestionAns

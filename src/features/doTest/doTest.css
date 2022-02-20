@@ -1,32 +1,30 @@
-.create_test-header {
+.do_test-header {
   width: 100%;
   padding: 24px;
-  display: flex;
-  gap: 32px;
+  gap: 8px;
   flex-direction: column;
   background-color: white;
   border-radius: 8px;
   box-shadow: #cccccc;
 }
 
-.create_test-footer {
-  margin: auto;
-  width: 50%;
-  left: 0;
+.do_test-footer {
+  width: 10%;
+  min-height: 50%;
+  left: 2%;
   right: 0;
-  height: 36px;
   padding: 12px;
   position: fixed;
-  bottom: 0;
+  top: 25%;
   display: flex;
-  gap: 32px;
-  flex-direction: row-reverse;
+  gap: 8px;
+  flex-direction: column;
   background-color: white;
   border-radius: 8px;
   box-shadow: #cccccc;
 }
 
-.create_test-form {
+.do_test-form {
   width: 40%;
   min-height: 86vh;
   display: flex;
@@ -39,7 +37,8 @@
   padding-bottom: 80px;
 }
 
-.create_test-el {
+.do_test-el {
+  position: relative;
   padding: 24px;
   width: 100%;
   min-height: 150px;
@@ -51,7 +50,7 @@
   flex-direction: column;
 }
 
-.create_test-edit_bar {
+.do_test-edit_bar {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -63,7 +62,7 @@
   top: 0;
 }
 
-.create_test-icon {
+.do_test-icon {
   padding: 8px;
   cursor: pointer;
 }
@@ -76,52 +75,76 @@
   position: relative;
 }
 
-.create_test-group_qa {
+.do_test-group_qa {
   width: 100%;
   display: flex;
   flex-direction: row;
   gap: 24px;
 }
 
-.create_test-area_question {
+.do_test-area_question {
   width: 100%;
   flex: 1;
 }
 
-.create_test-input {
+.do_test-input {
   width: 100%;
 }
 
-.create_test-group {
+.do_test-group {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.create_test-group_ans {
+.do_test-group_ans {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.create_test-ans {
+.do_test-ans {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.create_test-ans_input {
+.do_test-ans_input {
   display: flex;
   flex-direction: row;
-  gap: 24px;
   flex: 1;
   width: 100%;
 }
 
-.create_test-area_type {
+.do_test-area_type {
   display: flex;
   flex-direction: row;
   gap: 8px;
   flex: 1;
   width: 100%;
+}
+
+.index {
+  position: absolute;
+  bottom: 0;
+  right: 2%;
+  color: #262626;
+}
+
+.do_test-footer_content {
+  display: grid;
+  grid-template-columns: repeat(4, 18%);
+  gap: 6px;
+}
+
+.do_test-block {
+  border: 1px solid #262626;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+}
+
+.do_test-block-active {
+  background-color: #cccccc;
 }

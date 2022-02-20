@@ -11,6 +11,7 @@ import NavBar from "../features/layout/navbar/navbar";
 import Footer from "../features/layout/footer/footer";
 import MyTest from "../features/mytest/mytest";
 import CreateTest from "../features/createTest/createTest";
+import DoTest from "../features/doTest/doTest";
 import * as React from "react";
 
 function Routings({ children, ...renderProps }) {
@@ -21,6 +22,7 @@ function Routings({ children, ...renderProps }) {
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/CreateTest" element={<CreateTest />} />
+          <Route path="/DoTest" element={<DoTest />} />
           <Route path="/MyTest" element={<MyTest />} />
           <Route
             path="/dashboard"
