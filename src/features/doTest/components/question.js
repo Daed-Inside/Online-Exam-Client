@@ -17,11 +17,12 @@ function QuestionAns({ children, ...props }) {
   return (
     <>
       <div key={el.id} id={el.id} className="do_test-el">
-        <div className="index">{index + 1}</div>
         <div className="do_test-group">
           <div className="do_test-group_qa">
             <div className="do_test-area_question">
-              <h3>{el.question}</h3>
+              <h3>
+                Question {index + 1}: {el.question}
+              </h3>
             </div>
           </div>
           <div className="do_test-group_ans">

@@ -7,7 +7,7 @@
 //2: hard
 export const fakeData = {
   title: "Bài test 2",
-  duration: 1645347223000,
+  duration: 1649091600000,
   subject: "Môn 1",
   description: "Mô tả gì đó",
   easyQuest: 0,

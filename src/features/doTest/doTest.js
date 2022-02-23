@@ -42,14 +42,14 @@ function DoTest() {
           }}
           variant="contained"
         >
-          Nộp bài
+          Submit
         </Button>
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <p>Thời gian còn lại</p>
+          <p>Remaining time</p>
           <Countdown date={formData.duration} renderer={renderer} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-          <p>Mục lục</p>
+          <p>Table of contents</p>
           <div className="do_test-footer_content">
             {formData?.data?.map((el, index) => (
               <ContentBlock
