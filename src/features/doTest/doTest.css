@@ -1,0 +1,159 @@
+.do_test-header {
+  width: 100%;
+  gap: 8px;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: #cccccc;
+}
+
+.do_test-footer {
+  width: 10%;
+  min-height: 50%;
+  left: 2%;
+  right: 0;
+  padding: 12px;
+  position: fixed;
+  top: 25%;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: #cccccc;
+}
+
+.do_test-form {
+  width: 65%;
+  border-radius: 8px;
+  min-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  position: relative;
+  align-items: center;
+  margin: 40px auto;
+  padding-bottom: 80px;
+  padding: 24px;
+  background-color: #ffffff;
+}
+
+.do_test-el {
+  position: relative;
+  width: 100%;
+  min-height: 150px;
+  background-color: white;
+  box-shadow: #cccccc;
+  position: relative;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.do_test-edit_bar {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 40px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: #cccccc;
+  left: 102%;
+  top: 0;
+}
+
+.do_test-icon {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.full-wrap-content {
+  height: auto;
+}
+
+.body-background {
+  position: relative;
+}
+
+.do_test-group_qa {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.do_test-area_question {
+  width: 100%;
+  flex: 1;
+}
+
+.do_test-input {
+  width: 100%;
+}
+
+.do_test-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.do_test-group_ans {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.do_test-ans {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.do_test-ans_input {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+  gap: 8px;
+}
+
+.do_test-area_type {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex: 1;
+  width: 100%;
+}
+
+.index {
+  position: absolute;
+  bottom: 0;
+  right: 2%;
+  color: #262626;
+}
+
+.do_test-footer_content {
+  display: grid;
+  grid-template-columns: repeat(4, 18%);
+  gap: 6px;
+}
+
+.do_test-block {
+  border: 1px solid #262626;
+  padding: 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+}
+
+.do_test-block-active {
+  background-color: #cccccc;
+}
+
+.css-vqmohf-MuiButtonBase-root-MuiRadio-root {
+  padding: 0 !important;
+}
+
+.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
+  padding: 0 !important;
+}

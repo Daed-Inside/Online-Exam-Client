@@ -11,6 +11,8 @@ import NavBar from "../features/layout/navbar/navbar";
 import Footer from "../features/layout/footer/footer";
 import MyTest from "../features/mytest/mytest";
 import Personal from "../features/personal/personal";
+import CreateTest from "../features/createTest/createTest";
+import DoTest from "../features/doTest/doTest";
 import * as React from "react";
 
 function Routings({ children, ...renderProps }) {
@@ -20,6 +22,8 @@ function Routings({ children, ...renderProps }) {
       {isLogin === true ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/CreateTest" element={<CreateTest />} />
+          <Route path="/DoTest" element={<DoTest />} />
           <Route path="/MyTest" element={<MyTest />} />
           <Route path="/personal-info" element={<Personal />} />
           <Route
@@ -51,6 +55,12 @@ function AdminRouting({ children, ...props }) {
           <Router>
             <Routes>{children}</Routes>
           </Router>
+        {/* <body className="body-background"> */}
+        <div className="body-background">
+          <Router>
+            <Routes>{children}</Routes>
+          </Router>
+          {/* </body> */}
         </div>
         <Footer />
       </div>
