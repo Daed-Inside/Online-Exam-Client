@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import {
   handleChangeQuestion,
   handleChangeType,
+  handleChangeQuesType,
   handleChangeAns,
   addChangeAns,
   containsObject,
@@ -15,7 +16,7 @@ import {
 } from "../libs/functions";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { selectType } from "./selectTypeConfig";
+import { selectType, selectQuesType } from "./selectTypeConfig";
 import Radio from "@mui/material/Radio";
 import FormLabel from "@mui/material/FormLabel";
 import ClearIcon from "@mui/icons-material/Clear";
@@ -63,6 +64,7 @@ function QuestionAns({ children, ...props }) {
           <div className="create_test-group_qa">
             <div className="create_test-area_question">
               <TextField
+                rows={2}
                 className="create_test-input"
                 value={el.question}
                 onChange={(e) =>
@@ -78,25 +80,56 @@ function QuestionAns({ children, ...props }) {
                 variant="filled"
               />
             </div>
-            <TextField
-              id="outlined-select-currency-native"
-              select
-              label="Chọn loại"
-              value={el.type}
-              onChange={(e) => {
-                handleChangeType(e.target.value, el.id, formData, setFormData);
-              }}
-              SelectProps={{
-                native: true,
-              }}
-              helperText="Chọn loại cho câu trả lời"
-            >
-              {selectType.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
+            <div className="create_test-area_type">
+              <TextField
+                id="outlined-select-currency-native"
+                select
+                label="Chọn loại"
+                value={el.type}
+                onChange={(e) => {
+                  handleChangeType(
+                    e.target.value,
+                    el.id,
+                    formData,
+                    setFormData
+                  );
+                }}
+                SelectProps={{
+                  native: true,
+                }}
+                helperText="Chọn loại cho câu trả lời"
+              >
+                {selectType.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+              <TextField
+                id="outlined-select-currency-native"
+                select
+                label="Chọn độ khó"
+                value={el.questType}
+                onChange={(e) => {
+                  handleChangeQuesType(
+                    e.target.value,
+                    el.id,
+                    formData,
+                    setFormData
+                  );
+                }}
+                SelectProps={{
+                  native: true,
+                }}
+                helperText="Chọn loại cho câu trả lời"
+              >
+                {selectQuesType.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </TextField>
+            </div>
           </div>
           <div className="create_test-group_ans">
             <Answers

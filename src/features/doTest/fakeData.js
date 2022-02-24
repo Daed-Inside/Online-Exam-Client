@@ -6,9 +6,9 @@
 //1: medium
 //2: hard
 export const fakeData = {
-  title: "Bài test 1",
-  duration: 10000000,
-  subject: "radio",
+  title: "Bài test 2",
+  duration: 1649091600000,
+  subject: "Môn 1",
   description: "Mô tả gì đó",
   easyQuest: 0,
   mediumQuest: 0,
@@ -19,6 +19,8 @@ export const fakeData = {
       question: "What is your age?",
       textAns: "",
       questType: 0,
+      hasChoose: false,
+      selectAnswers: [],
       correctAnswers: [
         {
           id: "1",
@@ -42,13 +44,15 @@ export const fakeData = {
       question: "What is your age?",
       textAns: "",
       questType: 1,
+      hasChoose: false,
+      selectAnswers: [],
       correctAnswers: [
         {
           id: "1",
           value: "over 50 years old",
         },
       ],
-      type: "radio",
+      type: "checkbox",
       answers: [
         {
           id: "1",

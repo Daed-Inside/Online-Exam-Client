@@ -197,3 +197,68 @@ export function containsObject(obj, list) {
 
   return false;
 }
+
+export function handleChangeRadioType(qsId, id, json, setJson) {
+  let newJson = json.data?.map((e) => {
+    if (e.id === qsId) {
+      e.hasChoose = true;
+      e.selectAnswers = e.answers?.filter((el) => el.id === id);
+    }
+    return e;
+  });
+
+  setJson({
+    ...json,
+    data: newJson,
+  });
+}
+
+export function onCheckRadioType(qsId, id, json) {
+  let isCheck = null;
+  json.data?.map((e) => {
+    if (e.id === qsId) {
+      isCheck = e.selectAnswers?.find((el) => el.id === id);
+    }
+    return e;
+  });
+
+  return isCheck ? true : false;
+}
+
+export function handleChangeCheckBoxType(qsId, id, json, setJson) {
+  let newJson = json.data?.map((e) => {
+    if (e.id === qsId) {
+      e.hasChoose = true;
+      let newSelectAns = [];
+      let existedAns = e.selectAnswers?.find((el) => el.id === id);
+      if (existedAns) {
+        e.selectAnswers = e.selectAnswers.filter((e) => e.id !== id);
+      } else {
+        e.selectAnswers.push(e.answers?.find((el) => el.id === id));
+        newSelectAns = e.selectAnswers.filter(
+          (v, i, a) =>
+            a.findIndex((t) => t.id === v.id && t.value === v.value) === i
+        );
+        e.selectAnswers = newSelectAns;
+      }
+    }
+    return e;
+  });
+
+  setJson({
+    ...json,
+    data: newJson,
+  });
+}
+
+export function onCheckHasChoose(qsId, json) {
+  let isCheck = null;
+  json.data?.map((e) => {
+    if (e.id === qsId) {
+      isCheck = e.hasChoose;
+    }
+    return e;
+  });
+
+  return isCheck ? true : false;
+}
