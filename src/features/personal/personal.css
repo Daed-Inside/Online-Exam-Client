@@ -1,0 +1,29 @@
+.personal-layout {
+    height: 85vh;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    margin: 20px 200px 0px 200px;
+    border-radius: 8px;
+    box-shadow: #cccccc;
+}
+
+.personal-left-section {
+    width: 30%;
+    display: inline-block;
+    background-color: blue;
+    height: 100%;
+    box-shadow: #cccccc;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.personal-right-section {
+    width: 70%;
+    display: inline-block;
+    background-color: red;
+    height: 100%;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
