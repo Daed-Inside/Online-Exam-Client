@@ -15,8 +15,9 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
+import Link from '@mui/material/Link';
 
-const pages = ["My Result", "My Test", "Create"];
+const pages = [{label:"Create Test", url: "/CreateTest"}, {label:"Do Test", url: "/DoTest"}, {label:"My Test", url: "/MyTest"}];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const NavBar = () => {
@@ -81,22 +82,18 @@ const NavBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.url}>
+                  <Link href={page.url}>{page.label}</Link>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+          {pages.map((page) => (
+                <MenuItem key={page.url} onClick={()=>{}}>
+                  <Link textAlign="center" href={page.url}>{page.label}</Link>
+                </MenuItem>
+              ))}
           </Box>
           <Search>
             <SearchIconWrapper>
