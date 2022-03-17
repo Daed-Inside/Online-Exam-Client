@@ -3,6 +3,7 @@ import {
   Route,
   Navigate,
   Routes,
+  useNavigate,
 } from "react-router-dom";
 import "./routes.css";
 import Login from "../features/login/login";
@@ -12,13 +13,31 @@ import Footer from "../features/layout/footer/footer";
 import MyTest from "../features/mytest/mytest";
 import CreateTest from "../features/createTest/createTest";
 import DoTest from "../features/doTest/doTest";
+import constant from "../constants/constant";
 import * as React from "react";
 
 function Routings({ children, ...renderProps }) {
-  const isLogin = true;
+  const navigate = useNavigate();
+  const token = localStorage.getItem(constant.localStorage.TOKEN);
+
+  React.useEffect(() => {
+    if (token) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  }, []);
+
+  window.addEventListener("storage", () => {
+    const token = localStorage.getItem(constant.localStorage.TOKEN);
+    if (!token) {
+      navigate("/login");
+    }
+  });
+
   return (
     <>
-      {isLogin === true ? (
+      {token ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/CreateTest" element={<CreateTest />} />
@@ -51,9 +70,9 @@ function AdminRouting({ children, ...props }) {
         <NavBar />
         {/* <body className="body-background"> */}
         <div className="body-background">
-          <Router>
-            <Routes>{children}</Routes>
-          </Router>
+          {/* <Router> */}
+          <Routes>{children}</Routes>
+          {/* </Router> */}
           {/* </body> */}
         </div>
         <Footer />
@@ -64,9 +83,9 @@ function AdminRouting({ children, ...props }) {
 
 function GlobalRouting({ children, ...props }) {
   return (
-    <Router>
-      <Routes>{children}</Routes>
-    </Router>
+    // <Router>
+    <Routes>{children}</Routes>
+    // </Router>
   );
 }
 

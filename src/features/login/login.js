@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import ImageStudy from "../../assets/images/login_test_image.png";
 import { FormikError } from "../../components/FormikError/FormikError.js";
 import { SignInSchema } from "../../constants/validation";
+import { handleApi } from "../../components/utils/utils";
+import constant from "../../constants/constant";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function handleSubmit(values) {
   const body = {
@@ -13,10 +16,13 @@ function handleSubmit(values) {
   };
 
   axios
-    .post(`http://localhost:8310/keycloak-service/login`, body)
+    .post(`${constant.BASEURL}/keycloak-service/login`, body)
     .then((res) => {
-      console.log(res);
-      console.log(res.data);
+      handleApi(res, (e) => {
+        localStorage.setItem(constant.localStorage.EMAIL, e.email);
+        localStorage.setItem(constant.localStorage.TOKEN, e.token);
+        window.location.reload();
+      });
       setTimeout(() => {
         alert("Login success");
       }, 400);
@@ -30,6 +36,7 @@ function handleSubmit(values) {
 }
 
 function Login() {
+  const navigate = useNavigate();
   return (
     <>
       <div className="login-layout">
@@ -43,8 +50,11 @@ function Login() {
             <p className="login-heading">Login</p>
             <Formik
               initialValues={{ email: "", password: "" }}
+              enableReinitialize={true}
               validationSchema={SignInSchema}
-              onSubmit={(values, { setSubmitting }) => handleSubmit(values)}
+              onSubmit={(values, { setSubmitting }) =>
+                handleSubmit(values, navigate)
+              }
             >
               {({
                 isSubmitting,

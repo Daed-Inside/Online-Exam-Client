@@ -8,13 +8,6 @@ function App() {
     <>
       <Routings></Routings>
       <Toast />
-      <button
-        onClick={() => {
-          showToast("Success", "fail");
-        }}
-      >
-        test
-      </button>
     </>
   );
 }

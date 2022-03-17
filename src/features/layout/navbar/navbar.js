@@ -15,12 +15,19 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
-import Link from '@mui/material/Link';
+import Link from "@mui/material/Link";
+import BookIcon from "../../../assets/images/book.png";
+import { useNavigate } from "react-router-dom";
 
-const pages = [{label:"Create Test", url: "/CreateTest"}, {label:"Do Test", url: "/DoTest"}, {label:"My Test", url: "/MyTest"}];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = [
+  { label: "Create Test", url: "/CreateTest" },
+  { label: "Do Test", url: "/DoTest" },
+  { label: "My Test", url: "/MyTest" },
+];
+const settings = ["Profile", "Dashboard"];
 
 const NavBar = () => {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -43,14 +50,21 @@ const NavBar = () => {
     <AppBar className="navBar" position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Typography
+          {/* <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
             LOGO
-          </Typography>
+          </Typography> */}
+          <img
+            src={BookIcon}
+            id="logo"
+            onClick={() => {
+              navigate("./");
+            }}
+          />
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -89,11 +103,13 @@ const NavBar = () => {
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-          {pages.map((page) => (
-                <MenuItem key={page.url} onClick={()=>{}}>
-                  <Link textAlign="center" href={page.url}>{page.label}</Link>
-                </MenuItem>
-              ))}
+            {pages.map((page) => (
+              <MenuItem className="menu_item" key={page.url} onClick={() => {}}>
+                <a className="menu_item" textAlign="center" href={page.url}>
+                  {page.label}
+                </a>
+              </MenuItem>
+            ))}
           </Box>
           <Search>
             <SearchIconWrapper>
@@ -131,6 +147,15 @@ const NavBar = () => {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem
+                key={"logout"}
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.reload();
+                }}
+              >
+                <Typography textAlign="center">Log out</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
