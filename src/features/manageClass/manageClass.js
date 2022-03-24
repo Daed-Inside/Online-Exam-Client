@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./mytest.css";
+import "./manageClass.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link } from "react-router-dom";
 import ImageStudy from "../../assets/images/login_test_image.png";
@@ -30,11 +30,10 @@ import { visuallyHidden } from "@mui/utils";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
-import { SampleHeader } from "../../constants/sample";
-import { SampleMyTest } from "../../constants/sample";
+import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
 import { EnhancedTableHead } from "../../components/table/Header";
 
-export default function MyTest() {
+export default function ManageClass() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("id");
   const [page, setPage] = React.useState(0);
@@ -42,7 +41,9 @@ export default function MyTest() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - SampleMyTest.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - SampleManageClass.length)
+      : 0;
 
   return (
     <>
@@ -51,7 +52,7 @@ export default function MyTest() {
           <div className="table-name">
             <div className="align-name-center">
               <Typography variant="h4" noWrap component="div">
-                My Test
+                Manage Class
               </Typography>
             </div>
           </div>
@@ -85,15 +86,15 @@ export default function MyTest() {
                 size={dense ? "small" : "medium"}
               >
                 <EnhancedTableHead
-                  header={SampleHeader}
+                  header={ManageClassHeader}
                   order={order}
                   orderBy={orderBy}
-                  rowCount={SampleMyTest.length}
+                  rowCount={SampleManageClass.length}
                 />
                 <TableBody>
                   {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                  {SampleMyTest.map((row, index) => {
+                  {SampleManageClass.map((row, index) => {
                     return (
                       <TableRow hover key={row.id}>
                         <TableCell
@@ -107,9 +108,9 @@ export default function MyTest() {
                         <TableCell align="left" className="word-break-cell">
                           {row.name}
                         </TableCell>
-                        <TableCell align="left">{row.subject}</TableCell>
-                        <TableCell align="left">{row.date}</TableCell>
-                        <TableCell align="center">{row.score}</TableCell>
+                        <TableCell align="left">
+                          {row.student_number} members
+                        </TableCell>
                       </TableRow>
                     );
                   })}
@@ -128,7 +129,7 @@ export default function MyTest() {
             <TablePagination
               rowsPerPageOptions={[5, 10]}
               component="div"
-              count={SampleMyTest.length}
+              count={SampleManageClass.length}
               rowsPerPage={rowsPerPage}
               page={page}
             />

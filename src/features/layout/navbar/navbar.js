@@ -23,6 +23,7 @@ const pages = [
   { label: "Create Test", url: "/CreateTest" },
   { label: "Do Test", url: "/DoTest" },
   { label: "My Test", url: "/MyTest" },
+  { label: "Manage Class", url: "/ManageClass" },
 ];
 const settings = ["Profile", "Dashboard"];
 

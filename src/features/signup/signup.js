@@ -144,8 +144,8 @@ function SignUp() {
                       label="Role"
                       onChange={handleChange}
                     >
-                      <MenuItem value={"USER"}>User</MenuItem>
-                      <MenuItem value={"ADMIN"}>Admin</MenuItem>
+                      <MenuItem value={"TEACHER"}>Teacher</MenuItem>
+                      <MenuItem value={"STUDENT"}>Student</MenuItem>
                     </Select>
                   </div>
                   {/* <ErrorMessage name="password" component="div" /> */}

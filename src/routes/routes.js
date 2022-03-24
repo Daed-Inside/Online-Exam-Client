@@ -12,6 +12,7 @@ import NavBar from "../features/layout/navbar/navbar";
 import Footer from "../features/layout/footer/footer";
 import MyTest from "../features/mytest/mytest";
 import CreateTest from "../features/createTest/createTest";
+import ManageClass from "../features/manageClass/manageClass";
 import DoTest from "../features/doTest/doTest";
 import constant from "../constants/constant";
 import * as React from "react";
@@ -43,6 +44,7 @@ function Routings({ children, ...renderProps }) {
           <Route exact path="/CreateTest/:id" element={<CreateTest />} />
           <Route path="/DoTest" element={<DoTest />} />
           <Route path="/MyTest" element={<MyTest />} />
+          <Route path="/ManageClass" element={<ManageClass />} />
           <Route
             path="/dashboard"
             element={
