@@ -63,9 +63,10 @@ function SignUp() {
               }}
               enableReinitialize={true}
               validationSchema={SignUpSchema}
-              onSubmit={(values, { setSubmitting }) =>
-                handleSubmit(values, navigate)
-              }
+              onSubmit={(values, { setSubmitting }) => {
+                handleSubmit(values, navigate);
+                setSubmitting(false);
+              }}
             >
               {({
                 isSubmitting,

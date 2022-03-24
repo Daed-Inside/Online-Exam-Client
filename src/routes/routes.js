@@ -22,7 +22,7 @@ function Routings({ children, ...renderProps }) {
 
   React.useEffect(() => {
     if (token) {
-      navigate("/dashboard");
+      // navigate("/dashboard");
     } else {
       navigate("/login");
     }
@@ -40,7 +40,7 @@ function Routings({ children, ...renderProps }) {
       {token ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/CreateTest" element={<CreateTest />} />
+          <Route exact path="/CreateTest/:id" element={<CreateTest />} />
           <Route path="/DoTest" element={<DoTest />} />
           <Route path="/MyTest" element={<MyTest />} />
           <Route

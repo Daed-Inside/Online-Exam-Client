@@ -9,7 +9,7 @@ import constant from "../../constants/constant";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function handleSubmit(values) {
+function handleSubmit(values, navigate) {
   const body = {
     email: values.email,
     password: values.password,
@@ -19,9 +19,9 @@ function handleSubmit(values) {
     .post(`${constant.BASEURL}/keycloak-service/login`, body)
     .then((res) => {
       handleApi(res, (e) => {
-        localStorage.setItem(constant.localStorage.EMAIL, e.email);
-        localStorage.setItem(constant.localStorage.TOKEN, e.token);
-        window.location.reload();
+        //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+        localStorage.setItem(constant.localStorage.TOKEN, e.access_token);
+        navigate("/dashboard");
       });
       setTimeout(() => {
         alert("Login success");
@@ -52,9 +52,10 @@ function Login() {
               initialValues={{ email: "", password: "" }}
               enableReinitialize={true}
               validationSchema={SignInSchema}
-              onSubmit={(values, { setSubmitting }) =>
-                handleSubmit(values, navigate)
-              }
+              onSubmit={(values, { setSubmitting }) => {
+                handleSubmit(values, navigate);
+                setSubmitting(false);
+              }}
             >
               {({
                 isSubmitting,

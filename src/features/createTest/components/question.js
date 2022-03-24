@@ -233,7 +233,10 @@ function Answers({ ...props }) {
         })}
       {el.type !== "text" && (
         <Button
-          onClick={() => addChangeAns(el.id, formData, setFormData)}
+          onClick={() => {
+            console.log(el.id);
+            addChangeAns(el.id, formData, setFormData);
+          }}
           variant="contained"
         >
           Thêm
