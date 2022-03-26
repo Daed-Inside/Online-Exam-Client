@@ -27,11 +27,14 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
 import { EnhancedTableHead } from "../../components/table/Header";
+import EditIcon from "@mui/icons-material/Edit";
+import ManageClassDiaglog from "./component/manageClassDialog";
 
 export default function ManageClass() {
   const [order, setOrder] = React.useState("asc");
@@ -39,11 +42,14 @@ export default function ManageClass() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [open, setOpen] = React.useState(false);
 
   const emptyRows =
     page > 0
       ? Math.max(0, (1 + page) * rowsPerPage - SampleManageClass.length)
       : 0;
+
+  function handleEdit() {}
 
   return (
     <>
@@ -71,6 +77,9 @@ export default function ManageClass() {
                   ),
                 }}
               />
+              <Button id={"btn_create"} onClick={() => setOpen(!open)}>
+                Create
+              </Button>
             </div>
           </div>
         </div>
@@ -95,24 +104,7 @@ export default function ManageClass() {
                   {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
                   {SampleManageClass.map((row, index) => {
-                    return (
-                      <TableRow hover key={row.id}>
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          padding="normal"
-                          align="center"
-                        >
-                          {row.id}
-                        </TableCell>
-                        <TableCell align="left" className="word-break-cell">
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="left">
-                          {row.student_number} members
-                        </TableCell>
-                      </TableRow>
-                    );
+                    return <BodyItem row={row} />;
                   })}
                   {emptyRows > 0 && (
                     <TableRow
@@ -136,6 +128,32 @@ export default function ManageClass() {
           </Paper>
         </div>
       </div>
+      <ManageClassDiaglog open={open} setOpen={setOpen} />
     </>
   );
 }
+
+const BodyItem = (props) => {
+  const [open, setOpen] = useState(false);
+  const { row } = props;
+  return (
+    <>
+      <TableRow hover key={row.id}>
+        <TableCell component="th" scope="row" padding="normal" align="center">
+          {row.id}
+        </TableCell>
+        <TableCell align="left" className="word-break-cell">
+          {row.name}
+        </TableCell>
+        <TableCell align="left">{row.student_list.length} members</TableCell>
+        <TableCell align="left">
+          <EditIcon onClick={() => setOpen(true)} className="icon" />
+          <DeleteIcon onClick={() => handleDelete(row.id)} className="icon" />
+        </TableCell>
+      </TableRow>
+      <ManageClassDiaglog open={open} setOpen={setOpen} el={row} />
+    </>
+  );
+};
+
+function handleDelete(id) {}
