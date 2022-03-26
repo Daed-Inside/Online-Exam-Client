@@ -13,6 +13,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
+import { FormikError } from "../../../components/FormikError/FormikError";
 import * as Yup from "yup";
 
 export const CreateClassSchema = Yup.object().shape({
@@ -33,8 +34,6 @@ function ManageClassDiaglog(props) {
     }
   }
 
-  function handleSubmit() {}
-
   return (
     <>
       <Dialog
@@ -43,143 +42,145 @@ function ManageClassDiaglog(props) {
         onClose={setOpen}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">
-          {el ? "Edit Class" : "Create Class"}
-        </DialogTitle>
-        <DialogContent>
-          <Formik
-            initialValues={{ name: el?.name, selectStu: el?.student_list }}
-            enableReinitialize={true}
-            validationSchema={CreateClassSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(false);
-            }}
-          >
-            {({
-              isSubmitting,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              setFieldValue,
-              errors,
-              touched,
-            }) => (
-              <Form style={{ width: "100%" }}>
-                <TextField
-                  multiline
-                  name="name"
-                  label={"Class's name"}
-                  value={values.name}
-                  onChange={handleChange}
-                  style={{ width: "100%", margin: "12px 0" }}
-                  variant="standard"
-                />
-                <div
-                  style={{
-                    width: "100%",
-                    margin: "12px 0",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
+        <Formik
+          initialValues={{ name: el?.name, selectStu: el?.student_list }}
+          enableReinitialize={true}
+          validationSchema={CreateClassSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(false);
+          }}
+        >
+          {({
+            isSubmitting,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            setFieldValue,
+            errors,
+            touched,
+          }) => (
+            <>
+              <DialogTitle id="responsive-dialog-title">
+                {el ? "Edit Class" : "Create Class"}
+              </DialogTitle>
+              <DialogContent>
+                <Form style={{ width: "100%" }}>
+                  <TextField
+                    multiline
+                    name="name"
+                    label={"Class's name"}
+                    value={values.name}
+                    onChange={handleChange}
+                    style={{ width: "100%", margin: "12px 0" }}
+                    variant="standard"
+                  />
+                  {errors.name && touched.name ? (
+                    FormikError(errors, "name")
+                  ) : (
+                    <div />
+                  )}
                   <div
                     style={{
-                      borderRadius: "4px",
-                      padding: "12px",
-                      border: "1px solid #bdbdbd",
-                      width: "300px",
-                      height: "300px",
-                      overflow: "auto",
-                    }}
-                  >
-                    <TextField
-                      label="Search here"
-                      style={{
-                        border: "none",
-                        marginBottom: "12px",
-                      }}
-                      onChange={(e) => console.log(e.target.value)}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment>
-                            <IconButton>
-                              <SearchIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    {searchList?.map((e) => (
-                      <SelectItem
-                        key={e.id}
-                        item={e}
-                        searchList={searchList}
-                        setSearchList={setSearchList}
-                        values={values}
-                        setFieldValue={setFieldValue}
-                      />
-                    ))}
-                  </div>
-                  <div
-                    style={{
-                      margin: "0 12px",
-                      width: "50px",
-                      justifyContent: "center",
+                      width: "100%",
+                      margin: "12px 0",
                       display: "flex",
-                      flexDirection: "column",
+                      flexDirection: "row",
                     }}
                   >
                     <div
                       style={{
-                        width: "100%",
-                        height: "50px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+                        borderRadius: "4px",
+                        padding: "12px",
+                        border: "1px solid #bdbdbd",
+                        width: "300px",
+                        height: "300px",
+                        overflow: "auto",
                       }}
                     >
-                      <ArrowForwardIcon />
+                      <TextField
+                        label="Search here"
+                        style={{
+                          border: "none",
+                          marginBottom: "12px",
+                        }}
+                        onChange={(e) => console.log(e.target.value)}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment>
+                              <IconButton>
+                                <SearchIcon />
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                      {searchList?.map((e) => (
+                        <SelectItem
+                          key={e.id}
+                          item={e}
+                          searchList={searchList}
+                          setSearchList={setSearchList}
+                          values={values}
+                          setFieldValue={setFieldValue}
+                        />
+                      ))}
+                    </div>
+                    <div
+                      style={{
+                        margin: "0 12px",
+                        width: "50px",
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "50px",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                        }}
+                      >
+                        <ArrowForwardIcon />
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        borderRadius: "4px",
+                        border: "1px solid #bdbdbd",
+                        width: "300px",
+                        height: "300px",
+                        overflow: "auto",
+                      }}
+                    >
+                      {values.selectStu?.map((e) => (
+                        <RemoveItem
+                          key={e.id}
+                          setSearchList={setSearchList}
+                          searchList={searchList}
+                          item={e}
+                          values={values}
+                          setFieldValue={setFieldValue}
+                        />
+                      ))}
                     </div>
                   </div>
-                  <div
-                    style={{
-                      borderRadius: "4px",
-                      border: "1px solid #bdbdbd",
-                      width: "300px",
-                      height: "300px",
-                      overflow: "auto",
-                    }}
-                  >
-                    {values.selectStu?.map((e) => (
-                      <RemoveItem
-                        key={e.id}
-                        setSearchList={setSearchList}
-                        searchList={searchList}
-                        item={e}
-                        values={values}
-                        setFieldValue={setFieldValue}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={() => setOpen(!open)}>
-            Cancle
-          </Button>
-          <Button
-            onClick={() => {
-              handleSubmit();
-            }}
-            autoFocus
-          >
-            Save
-          </Button>
-        </DialogActions>
+                </Form>
+              </DialogContent>
+              <DialogActions>
+                <Button autoFocus onClick={() => setOpen(!open)}>
+                  Cancle
+                </Button>
+                <Button onClick={handleSubmit} autoFocus>
+                  Save
+                </Button>
+              </DialogActions>
+            </>
+          )}
+        </Formik>
       </Dialog>
     </>
   );
