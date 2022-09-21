@@ -51,18 +51,12 @@ function AdminRouting({ children, ...props }) {
     <>
       <div className="full-wrap-content">
         <NavBar />
-          <div className="body-background">
-          <Router>
-            <Routes>{children}</Routes>
-          </Router>
-        {/* <body className="body-background"> */}
         <div className="body-background">
           <Router>
             <Routes>{children}</Routes>
           </Router>
-          {/* </body> */}
+          <Footer />
         </div>
-        <Footer />
       </div>
     </>
   );

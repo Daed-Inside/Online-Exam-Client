@@ -186,7 +186,7 @@ function CreateTest() {
         ))}
       </div>
       <div className="create_test-footer">
-        <Button onClick={() => {}} variant="contained">
+        <Button onClick={() => console.log(formData)} variant="contained">
           Lưu
         </Button>
       </div>
