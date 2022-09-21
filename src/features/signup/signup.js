@@ -4,31 +4,43 @@ import { Link } from "react-router-dom";
 import ImageStudy from "../../assets/images/login_test_image.png";
 import { SignUpSchema } from "../../constants/validation";
 import { FormikError } from "../../components/FormikError/FormikError.js";
-import axios from 'axios';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { handleApi } from "../../components/utils/utils";
+import constant from "../../constants/constant";
+import { showToast } from "../../components/toast/toast";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
-function handleSubmit(values) {
-
+function handleSubmit(values, navigate) {
   const body = {
     email: values.email,
+    phone: values.phone,
+    address: values.address,
     username: values.email,
     password: values.password,
-    firstname: 'Khiem',
-    lastname: 'Pham'
+    firstname: "Khiem",
+    lastname: "Pham",
+    role: values.role,
   };
 
-  axios.post(`http://localhost:8310/keycloak-service/createUser`, body )
-  .then(res => {
-    console.log(res);
-    console.log(res.data);
-    setTimeout(() => {
-      alert('create success');
-    }, 400)
-  }).catch(error => {
-    console.log(error)
-  })
+  axios
+    .post(`${constant.BASEURL}/keycloak-service/createUser`, body)
+    .then((res) => {
+      handleApi(res, (e) => {
+        setTimeout(() => {
+          showToast(res.data.message, "success");
+          navigate("/login");
+        }, 400);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 function SignUp() {
+  const navigate = useNavigate();
   return (
     <>
       <div className="signup-layout">
@@ -39,7 +51,7 @@ function SignUp() {
             <img alt="imagestudy" src={ImageStudy} />
           </div>
           <div className="signup-panel_right">
-            <p className="signup-heading">signup</p>
+            <p className="signup-heading">SIGN UP</p>
             <Formik
               initialValues={{
                 email: "",
@@ -47,9 +59,14 @@ function SignUp() {
                 confirmPass: "",
                 phone: "",
                 address: "",
+                role: "USER",
               }}
+              enableReinitialize={true}
               validationSchema={SignUpSchema}
-              onSubmit={(values, { setSubmitting }) => handleSubmit(values)}
+              onSubmit={(values, { setSubmitting }) => {
+                handleSubmit(values, navigate);
+                setSubmitting(false);
+              }}
             >
               {({
                 isSubmitting,
@@ -114,6 +131,22 @@ function SignUp() {
                       name="address"
                       placeholder="Your address"
                     />
+                  </div>
+                  <div className="input-section">
+                    <Select
+                      labelId=""
+                      id="role"
+                      placeholder="Select role"
+                      className="select-box"
+                      value={values.role}
+                      style={{ backgroundColor: "#fffff" }}
+                      name="role"
+                      label="Role"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={"TEACHER"}>Teacher</MenuItem>
+                      <MenuItem value={"STUDENT"}>Student</MenuItem>
+                    </Select>
                   </div>
                   {/* <ErrorMessage name="password" component="div" /> */}
                   <button

@@ -24,3 +24,21 @@ textarea:focus,
 input:focus {
   outline: none;
 }
+
+#logo{
+  width: 40px;
+  cursor: pointer;
+  
+}
+
+.menu_item{
+  text-decoration: none !important;
+}
+
+.menu_item:hover{
+  background-color: transparent !important;
+}
+
+.menu_item:focus {
+  background-color: transparent !important;
+}

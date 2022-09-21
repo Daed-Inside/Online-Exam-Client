@@ -16,9 +16,9 @@ export function addEl(index, json, setJson) {
   let newEl = {
     id: uniqueID("question"),
     question: "",
-    correctAnswer: "",
-    type: "text",
-    Answer: [],
+    correctAnswers: [],
+    type: "radio",
+    answers: [],
   };
   let newJson = json.data;
   newJson.splice(index, 0, newEl);
@@ -104,11 +104,14 @@ export function addChangeAns(qsId, json, setJson) {
     value: "",
   };
   let newJson = json.data?.map((e) => {
+    console.log("qsId", qsId);
+    console.log("e.id", e.id);
     if (e.id === qsId) {
       e.answers?.push(newAns);
     }
     return e;
   });
+  console.log(json);
   setJson({
     ...json,
     data: newJson,

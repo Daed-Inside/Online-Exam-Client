@@ -39,7 +39,7 @@ export function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {SampleHeader.map((headCell) => (
+        {props.header?.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={
@@ -51,10 +51,25 @@ export function EnhancedTableHead(props) {
             style={{ width: headCell.width }}
             className="table-header-cell"
           >
-            <div className="header-inside" style={{justifyContent: headCell.middle ? "center" : headCell.numeric ? "right" : "left"}}>
+            <div
+              className="header-inside"
+              style={{
+                justifyContent: headCell.middle
+                  ? "center"
+                  : headCell.numeric
+                  ? "right"
+                  : "left",
+              }}
+            >
               <div className="header-value">{headCell.label}</div>
               {headCell.isSort ? (
-                <div data-sortBy={'sort-' + headCell.label} className="sort-icon-section" onClick={e => console.log(e.currentTarget.getAttribute('data-sortBy'))}>
+                <div
+                  data-sortBy={"sort-" + headCell.label}
+                  className="sort-icon-section"
+                  onClick={(e) =>
+                    console.log(e.currentTarget.getAttribute("data-sortBy"))
+                  }
+                >
                   <svg
                     width="16"
                     height="16"
