@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import {
   handleChangeQuestion,
@@ -15,6 +15,8 @@ import {
   delAns,
 } from "../libs/functions";
 import AddIcon from "@mui/icons-material/Add";
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import DeleteIcon from "@mui/icons-material/Delete";
 import { selectType, selectQuesType } from "./selectTypeConfig";
 import Radio from "@mui/material/Radio";
@@ -25,9 +27,48 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import StarIcon from "@mui/icons-material/Star";
 import Tooltip from "@mui/material/Tooltip";
 import Checkbox from "@mui/material/Checkbox";
+import CircularProgress from '@mui/material/CircularProgress';
+import Autocomplete from '@mui/material/Autocomplete';
+import {topFilms} from "../fakeData";
+
+function sleep(delay = 0) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+}
 
 function QuestionAns({ children, ...props }) {
+  const [bankData, setBankData] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+  const loading = open && options.length === 0;
   const { el, index, focus, setFocused, formData, setFormData } = props;
+
+  useEffect(() => {
+    let active = true;
+
+    if (!loading) {
+      return undefined;
+    }
+
+    (async () => {
+      await sleep(1e3); // For demo purposes.
+
+      if (active) {
+        setOptions([]);
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if (!open) {
+      setOptions([...topFilms]);
+    }
+  }, [open]);
 
   return (
     <>
@@ -53,6 +94,20 @@ function QuestionAns({ children, ...props }) {
               addEl(index + 1, formData, setFormData);
             }}
           />
+          {
+            bankData === false ? <AccountBalanceWalletOutlinedIcon
+              className="create_test-icon"
+              onClick={() => {
+                setBankData(!bankData);
+              }}
+            /> : <AccountBalanceWalletIcon
+              className="create_test-icon"
+              onClick={() => {
+                setBankData(!bankData);
+              }}
+            />
+          }
+
           <DeleteIcon
             className="create_test-icon"
             onClick={() => {
@@ -63,7 +118,7 @@ function QuestionAns({ children, ...props }) {
         <div className="create_test-group">
           <div className="create_test-group_qa">
             <div className="create_test-area_question">
-              <TextField
+              {bankData === false?<TextField
                 rows={2}
                 className="create_test-input"
                 value={el.question}
@@ -72,19 +127,59 @@ function QuestionAns({ children, ...props }) {
                     e.target.value,
                     el.id,
                     formData,
-                    setFormData
+                    setFormData,
+                    bankData
                   )
                 }
                 key={el.id}
-                label="Nhập câu hỏi"
+                label="Input question"
                 variant="filled"
-              />
+              />: <Autocomplete
+              id="asynchronous-demo"
+              sx={{ width: 300 }}
+              open={open}
+              onOpen={() => {
+                setOpen(true);
+              }}
+              onClose={() => {
+                setOpen(false);
+              }}
+              isOptionEqualToValue={(option, value) => option.label === value.label}
+              getOptionLabel={(option) => option.label}
+              onSelect={(e)=>{
+                handleChangeQuestion(
+                  e.target.value === "" ? null : options?.find((option)=> e.target.value === option.label)?.value,
+                  el.id,
+                  formData,
+                  setFormData,
+                  bankData
+                )
+              }}
+              options={options}
+              loading={loading}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Choose question"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <React.Fragment>
+                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </React.Fragment>
+                    ),
+                  }}
+                />
+              )}
+            />}
             </div>
             <div className="create_test-area_type">
               <TextField
                 id="outlined-select-currency-native"
                 select
-                label="Chọn loại"
+                label="Choose type"
+                disabled={bankData}
                 value={el.type}
                 onChange={(e) => {
                   handleChangeType(
@@ -97,7 +192,7 @@ function QuestionAns({ children, ...props }) {
                 SelectProps={{
                   native: true,
                 }}
-                helperText="Chọn loại cho câu trả lời"
+                helperText="Choose type for answer"
               >
                 {selectType.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -108,7 +203,7 @@ function QuestionAns({ children, ...props }) {
               <TextField
                 id="outlined-select-currency-native"
                 select
-                label="Chọn độ khó"
+                label="Choose difficulty"
                 value={el.questType}
                 onChange={(e) => {
                   handleChangeQuesType(
@@ -121,7 +216,7 @@ function QuestionAns({ children, ...props }) {
                 SelectProps={{
                   native: true,
                 }}
-                helperText="Chọn loại cho câu trả lời"
+                helperText="Choose type for answer"
               >
                 {selectQuesType.map((option) => (
                   <option key={option.value} value={option.value}>

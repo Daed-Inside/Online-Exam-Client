@@ -91,7 +91,7 @@ function CreateTest(props) {
         <div className="create_test-header">
           <TextField
             id="title"
-            placeholder="Nhập tên form"
+            placeholder="Input name"
             variant="standard"
             value={formData.title}
             onChange={(e) => {
@@ -132,7 +132,7 @@ function CreateTest(props) {
               style={{ width: "100%" }}
               id="outlined-select-currency-native"
               select
-              label="Chọn môn"
+              label="Choose subject"
               value={formData.subject}
               onChange={(e) => {
                 onChangeFormValue(
@@ -145,7 +145,7 @@ function CreateTest(props) {
               SelectProps={{
                 native: true,
               }}
-              helperText="Chọn loại cho câu trả lời"
+              helperText="Choose subject"
             >
               {selectType.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -153,95 +153,32 @@ function CreateTest(props) {
                 </option>
               ))}
             </TextField>
-          </div>
-          <div className="create_test-question_number">
             <TextField
-              id="easyQuest"
+              id="chooseMinute"
               type={"number"}
-              placeholder="Easy"
+              helperText="Choose minute"
+              placeholder="Choose minute"
               variant="standard"
               value={formData.easyQuest}
               onChange={(e) => {
                 onChangeFormValue(
-                  "easyQuest",
+                  "chooseMinute",
                   e.target.value,
                   formData,
                   setFormData
                 );
               }}
-              style={{ height: 24, width: "100%" }}
-              InputLabelProps={{
-                style: {
-                  height: 24,
-                  ...{ top: `50px` },
-                },
-              }}
+              style={{ height: 45, width: "100%" }}
+              
               inputProps={{
                 style: {
-                  height: 24,
-                  fontSize: "1.5rem",
-                },
-              }}
-            />
-
-            <TextField
-              id="mediumQuest"
-              type={"number"}
-              placeholder="Medium"
-              variant="standard"
-              value={formData.mediumQuest}
-              onChange={(e) => {
-                onChangeFormValue(
-                  "mediumQuest",
-                  e.target.value,
-                  formData,
-                  setFormData
-                );
-              }}
-              style={{ height: 24, width: "100%" }}
-              InputLabelProps={{
-                style: {
-                  height: 24,
-                  ...{ top: `50px` },
-                },
-              }}
-              inputProps={{
-                style: {
-                  height: 24,
-                  fontSize: "1.5rem",
-                },
-              }}
-            />
-
-            <TextField
-              id="hardQuest"
-              type={"number"}
-              placeholder="Hard"
-              variant="standard"
-              value={formData.hardQuest}
-              onChange={(e) => {
-                onChangeFormValue(
-                  "hardQuest",
-                  e.target.value,
-                  formData,
-                  setFormData
-                );
-              }}
-              style={{ height: 24, width: "100%" }}
-              InputLabelProps={{
-                style: {
-                  height: 24,
-                  ...{ top: `50px` },
-                },
-              }}
-              inputProps={{
-                style: {
-                  height: 24,
+                  height: 45,
                   fontSize: "1.5rem",
                 },
               }}
             />
           </div>
+          
         </div>
         {formData?.data?.map((el, index) => (
           <QuestionAns
@@ -256,7 +193,7 @@ function CreateTest(props) {
         ))}
       </div>
       <div className="create_test-footer">
-        <Button
+      <Button
           onClick={() => {
             if (isEdit) {
               handleUpdate();
@@ -266,8 +203,8 @@ function CreateTest(props) {
           }}
           variant="contained"
         >
-          Lưu
-        </Button>
+          Save
+      </Button>
       </div>
     </>
   );

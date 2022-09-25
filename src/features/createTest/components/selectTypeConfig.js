@@ -1,29 +1,29 @@
 export const selectType = [
-  {
-    value: "text",
-    label: "Văn bản",
-  },
+  // {
+  //   value: "text",
+  //   label: "Văn bản",
+  // },
   {
     value: "radio",
-    label: "Chọn 1",
+    label: "One",
   },
   {
     value: "checkbox",
-    label: "Chọn nhiều",
+    label: "Many",
   },
 ];
 
 export const selectQuesType = [
   {
     value: 0,
-    label: "Câu dễ",
+    label: "Easy",
   },
   {
     value: 1,
-    label: "Câu trung bình",
+    label: "Medium",
   },
   {
     value: 2,
-    label: "Câu khó",
+    label: "Hard",
   },
 ];

@@ -15,6 +15,7 @@ import Personal from "../features/personal/personal";
 import CreateTest from "../features/createTest/createTest";
 import ManageClass from "../features/manageClass/manageClass";
 import DoTest from "../features/doTest/doTest";
+import Dashboard from "../features/dashboard/dashboard";
 import constant from "../constants/constant";
 import * as React from "react";
 
@@ -26,33 +27,27 @@ function Routings({ children, ...renderProps }) {
     if (token) {
       // navigate("/dashboard");
     } else {
-      navigate("/login");
+      //navigate("/login");
     }
   }, []);
 
   window.addEventListener("storage", () => {
     const token = localStorage.getItem(constant.localStorage.TOKEN);
     if (!token) {
-      navigate("/login");
+      //navigate("/login");
     }
   });
 
   return (
     <>
-      {token ? (
+      {true ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route exact path="/CreateTest" element={<CreateTest />} />
           <Route path="/DoTest" element={<DoTest />} />
           <Route path="/MyTest" element={<MyTest />} />
           <Route path="/ManageClass" element={<ManageClass />} />
-          <Route
-            path="/dashboard"
-            element={
-              <>
-                <p>dashboard</p>
-              </>
-            }
+          <Route path="/dashboard" element={<Dashboard />}
           />
         </AdminRouting>
       ) : (

@@ -36,11 +36,20 @@ export function delEl(id, json, setJson) {
   });
 }
 
-export function handleChangeQuestion(value, id, json, setJson) {
+export function handleChangeQuestion(value, id, json, setJson, isBank) {
   let newJson = json.data?.map((e) => {
-    if (e.id === id) {
-      e.question = value;
+    if(!isBank){
+      if (e.id === id) {
+        e.question = value;
+        e.question_id = null;
+        e.isBank = isBank
+      }
+    } else {
+      e.question_id = value;
+      e.question = null;
+      e.isBank = isBank
     }
+    
     return e;
   });
 
