@@ -22,10 +22,6 @@ export const CreateClassSchema = Yup.object().shape({
 
 function ManageClassDiaglog(props) {
   const { el, open, setOpen } = props;
-  const [searchList, setSearchList] = React.useState([
-    { id: 7, name: "H" },
-    { id: 8, name: "E" },
-  ]);
   React.useEffect(() => {}, []);
 
   function firstLoad() {
@@ -33,7 +29,6 @@ function ManageClassDiaglog(props) {
     } else {
     }
   }
-
   return (
     <>
       <Dialog
@@ -43,7 +38,10 @@ function ManageClassDiaglog(props) {
         aria-labelledby="responsive-dialog-title"
       >
         <Formik
-          initialValues={{ name: el?.name, selectStu: el?.student_list }}
+          initialValues={{searchList: [
+            { id: 7, name: "H" },
+            { id: 8, name: "E" },
+          ], name: el?.name, selectStu: el?.student_list ?? [] }}
           enableReinitialize={true}
           validationSchema={CreateClassSchema}
           onSubmit={(values, { setSubmitting }) => {
@@ -59,7 +57,8 @@ function ManageClassDiaglog(props) {
             setFieldValue,
             errors,
             touched,
-          }) => (
+          }) => {
+            return(
             <>
               <DialogTitle id="responsive-dialog-title">
                 {el ? "Edit Class" : "Create Class"}
@@ -115,12 +114,11 @@ function ManageClassDiaglog(props) {
                           ),
                         }}
                       />
-                      {searchList?.map((e) => (
+                      {values.searchList?.map((e) => (
                         <SelectItem
                           key={e.id}
                           item={e}
-                          searchList={searchList}
-                          setSearchList={setSearchList}
+                          searchList={values.searchList}
                           values={values}
                           setFieldValue={setFieldValue}
                         />
@@ -159,8 +157,6 @@ function ManageClassDiaglog(props) {
                       {values.selectStu?.map((e) => (
                         <RemoveItem
                           key={e.id}
-                          setSearchList={setSearchList}
-                          searchList={searchList}
                           item={e}
                           values={values}
                           setFieldValue={setFieldValue}
@@ -179,7 +175,7 @@ function ManageClassDiaglog(props) {
                 </Button>
               </DialogActions>
             </>
-          )}
+          )}}
         </Formik>
       </Dialog>
     </>
@@ -189,19 +185,20 @@ function ManageClassDiaglog(props) {
 export default ManageClassDiaglog;
 
 const SelectItem = (props) => {
-  const { item, setFieldValue, values, setSearchList, searchList } = props;
+  const { item, setFieldValue, values} = props;
 
-  function handleAddItem() {
+  async function handleAddItem() {
     let newSelItems = values.selectStu;
     newSelItems.push(item);
-    setSearchList(searchList.filter((e) => e.id !== item.id));
-    setFieldValue("selectStu", newSelItems);
+    await setFieldValue("selectStu", newSelItems);
+    await setFieldValue("searchList", values.searchList.filter((e) => e.id !== item.id));
+    
   }
 
   return (
     <>
       <div
-        onClick={() => handleAddItem(item)}
+        onClick={async() => await handleAddItem(item)}
         className="manage_class-select_item"
         style={{
           padding: "12px",
@@ -220,14 +217,14 @@ const SelectItem = (props) => {
 };
 
 const RemoveItem = (props) => {
-  const { item, setFieldValue, values, setSearchList, searchList } = props;
+  const { item, setFieldValue, values} = props;
   function handleRemoveItem() {
     let newItems = values.selectStu.filter((e) => e.id !== item.id);
     setFieldValue("selectStu", newItems);
 
-    let searchItems = searchList;
+    let searchItems = values.searchList;
     searchItems.push(item);
-    setSearchList(searchItems);
+    setFieldValue("searchList", searchItems);
   }
   return (
     <>
