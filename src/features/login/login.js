@@ -16,7 +16,7 @@ function handleSubmit(values, navigate) {
   };
 
   axios
-    .post(`${constant.BASEURL}/keycloak-service/login`, body)
+    .post(`${constant.BASEURL}/core/login`, body)
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
