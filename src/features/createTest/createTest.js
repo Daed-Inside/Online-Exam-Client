@@ -118,7 +118,7 @@ function CreateTest(props) {
             variant="standard"
             value={formData.title}
             onChange={(e) => {
-              onChangeFormValue("title", e.target.value, formData, setFormData);
+              onChangeFormValue("name", e.target.value, formData, setFormData);
             }}
             style={{ height: 50, width: "100%" }}
             InputLabelProps={{
@@ -182,10 +182,10 @@ function CreateTest(props) {
               helperText="Choose minute"
               placeholder="Choose minute"
               variant="standard"
-              value={formData.easyQuest}
+              value={formData.duration}
               onChange={(e) => {
                 onChangeFormValue(
-                  "chooseMinute",
+                  "duration",
                   e.target.value,
                   formData,
                   setFormData
@@ -203,7 +203,7 @@ function CreateTest(props) {
           </div>
           
         </div>
-        {formData?.data?.map((el, index) => (
+        {formData?.questions?.map((el, index) => (
           <QuestionAns
             index={index}
             focus={focus}

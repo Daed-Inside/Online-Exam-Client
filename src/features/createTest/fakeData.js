@@ -7,23 +7,19 @@ import { uniqueID } from "./libs/functions";
 //1: medium
 //2: hard
 export const fakeData = {
-  label: "Name",
+  name: "Name",
   duration: new Date(),
   subject: "radio",
   description: "Description",
   easyQuest: null,
   mediumQuest: null,
   hardQuest: null,
-  data: [
+  questions: [
     {
       id: uniqueID("question"),
-      question: "Question",
-      question_id: null,
-      isBank: false,
-      textAns: "",
-      questType: 0,
-      correctAnswers: [],
-      type: "radio",
+      name: "Question",
+      content: "question content",
+      level: 1,
       answers: [],
     },
   ],

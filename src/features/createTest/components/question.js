@@ -30,6 +30,9 @@ import Checkbox from "@mui/material/Checkbox";
 import CircularProgress from '@mui/material/CircularProgress';
 import Autocomplete from '@mui/material/Autocomplete';
 import {topFilms} from "../fakeData";
+import constant from "../../../constants/constant";
+import { handleApi } from "../../../components/utils/utils";
+import axios from "axios";
 
 function sleep(delay = 0) {
   return new Promise((resolve) => {
@@ -37,8 +40,34 @@ function sleep(delay = 0) {
   });
 }
 
+function fetchQuestion(setQuestionBank, search, level, subject_id) {
+  axios
+    .get(`${constant.BASEURL}/core/question`, { params: { subject: subject_id, level: level, search: search } })
+    .then((res) => {
+      handleApi(res, (e) => {
+        //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+        let arr_question = []
+        res.data.data.results.map((el, index) => (
+          arr_question.push({label: el.content, id: el.id})
+        ))
+        console.log("____________________DATA FETCH________________________")
+        console.log(arr_question);
+        setQuestionBank(arr_question)
+      });
+      // setTimeout(() => {
+      //   alert("Login success");
+      // }, 400);
+    })
+    .catch((error) => {
+      setTimeout(() => {
+        alert(error);
+      }, 400);
+    });
+}
+
 function QuestionAns({ children, ...props }) {
   const [bankData, setBankData] = useState(false);
+  const [QuestionBank, setQuestionBank] = useState([]);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
@@ -66,7 +95,8 @@ function QuestionAns({ children, ...props }) {
 
   useEffect(() => {
     if (!open) {
-      setOptions([...topFilms]);
+      fetchQuestion(setOptions, null, null, null)
+      // setOptions([...topFilms]);
     }
   }, [open]);
 
