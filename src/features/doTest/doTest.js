@@ -90,6 +90,7 @@ const ContentBlock = ({ id, label, json }) => {
 const renderer = ({ hours, minutes, seconds, completed }) => {
   if (completed) {
     // Render a completed state
+    window.location.href="/MyTest";
   } else {
     // Render a countdown
   }

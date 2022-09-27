@@ -14,8 +14,30 @@ import constant from "../../constants/constant";
 import { handleApi } from "../../components/utils/utils";
 import axios from "axios";
 
+
+function fetchSubject(setSubject) {
+  axios
+    .get(`${constant.BASEURL}/core/subject`)
+    .then((res) => {
+      handleApi(res, (e) => {
+        //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+        setSubject(res.data.data)
+      });
+      // setTimeout(() => {
+      //   alert("Login success");
+      // }, 400);
+    })
+    .catch((error) => {
+      console.log(error);
+      setTimeout(() => {
+        alert(error);
+      }, 400);
+    });
+}
+
 function CreateTest(props) {
   const [formData, setFormData] = useState(fakeData);
+  const [subject, setSubject] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [focus, setFocused] = useState(null);
   const { id } = useParams();
@@ -26,6 +48,7 @@ function CreateTest(props) {
       loadFormById(id);
     } else {
       setIsEdit(false);
+      fetchSubject(setSubject)
     }
   }, []);
 
@@ -95,7 +118,7 @@ function CreateTest(props) {
             variant="standard"
             value={formData.title}
             onChange={(e) => {
-              onChangeFormValue("title", e.target.value, formData, setFormData);
+              onChangeFormValue("name", e.target.value, formData, setFormData);
             }}
             style={{ height: 50, width: "100%" }}
             InputLabelProps={{
@@ -147,9 +170,9 @@ function CreateTest(props) {
               }}
               helperText="Choose subject"
             >
-              {selectType.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+              {subject.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.subject_name}
                 </option>
               ))}
             </TextField>
@@ -159,10 +182,10 @@ function CreateTest(props) {
               helperText="Choose minute"
               placeholder="Choose minute"
               variant="standard"
-              value={formData.easyQuest}
+              value={formData.duration}
               onChange={(e) => {
                 onChangeFormValue(
-                  "chooseMinute",
+                  "duration",
                   e.target.value,
                   formData,
                   setFormData
@@ -180,7 +203,7 @@ function CreateTest(props) {
           </div>
           
         </div>
-        {formData?.data?.map((el, index) => (
+        {formData?.questions?.map((el, index) => (
           <QuestionAns
             index={index}
             focus={focus}
