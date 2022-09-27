@@ -1,4 +1,4 @@
-const BASEURL = "http://4ac6-113-161-89-145.ngrok.io";
+const BASEURL = "http://localhost:8000";
 
 const localStorage = {
   TOKEN: "token",
