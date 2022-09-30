@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./mytest.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link } from "react-router-dom";
@@ -33,14 +33,51 @@ import TextField from "@mui/material/TextField";
 import { SampleHeader } from "../../constants/sample";
 import { SampleMyTest } from "../../constants/sample";
 import { EnhancedTableHead } from "../../components/table/Header";
+import { handleApi } from "../../components/utils/utils";
+import constant from "../../constants/constant";
+
+function fetchData(setTableData, pagingObj, setPagingObj) {
+  axios
+  .get(`${constant.BASEURL}/core/exam-result`, {params: pagingObj})
+  .then((res) => {
+    handleApi(res, (e) => {
+      //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+      setTableData(res.data.data.results)
+      setPagingObj({...pagingObj, totalPages: res.data.data.totalPages, totalElements: res.data.data.totalElements})
+    });
+    // setTimeout(() => {
+    //   alert("Login success");
+    // }, 400);
+  })
+  .catch((error) => {
+    console.log(error);
+    setTimeout(() => {
+      alert(error);
+    }, 400);
+  });
+}
+
 
 export default function MyTest() {
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("id");
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("id");
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [tableData, setTableData] = useState([])
+  const [pagingObj, setPagingObj] = useState({
+    page: 1,
+    limit: 10,
+    search: "",
+    totalElements: 0,
+    totalPages: 0,
+    sort_by: "id",
+    sort_type: "ASC"
+  })
 
+  useEffect(() => {
+    fetchData(setTableData, pagingObj, setPagingObj)
+  }, [])
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - SampleMyTest.length) : 0;
 
@@ -93,7 +130,7 @@ export default function MyTest() {
                 <TableBody>
                   {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                  {SampleMyTest.map((row, index) => {
+                  {tableData.map((row, index) => {
                     return (
                       <TableRow hover key={row.id}>
                         <TableCell
@@ -108,6 +145,7 @@ export default function MyTest() {
                           {row.name}
                         </TableCell>
                         <TableCell align="left">{row.subject}</TableCell>
+                        <TableCell align="left" className="word-break-cell">{row.first_name} {row.last_name}</TableCell>
                         <TableCell align="left">{row.date}</TableCell>
                         <TableCell align="center">{row.score}</TableCell>
                       </TableRow>
@@ -128,9 +166,9 @@ export default function MyTest() {
             <TablePagination
               rowsPerPageOptions={[5, 10]}
               component="div"
-              count={SampleMyTest.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
+              count={pagingObj.totalElements}
+              rowsPerPage={pagingObj.limit}
+              page={pagingObj.page}
             />
           </Paper>
         </div>

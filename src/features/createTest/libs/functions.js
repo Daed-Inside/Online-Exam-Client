@@ -20,11 +20,11 @@ export function addEl(index, json, setJson) {
     type: "radio",
     answers: [],
   };
-  let newJson = json.data;
+  let newJson = json.questions;
   newJson.splice(index, 0, newEl);
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 

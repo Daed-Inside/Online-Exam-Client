@@ -40,7 +40,7 @@ function sleep(delay = 0) {
   });
 }
 
-function fetchQuestion(setQuestionBank, search, level, subject_id) {
+function fetchQuestion(setOption, search, level, subject_id) {
   axios
     .get(`${constant.BASEURL}/core/question`, { params: { subject: subject_id, level: level, search: search } })
     .then((res) => {
@@ -48,11 +48,9 @@ function fetchQuestion(setQuestionBank, search, level, subject_id) {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
         let arr_question = []
         res.data.data.results.map((el, index) => (
-          arr_question.push({label: el.content, id: el.id})
+          arr_question.push({label: el.content, id: el.id, answers: el.answers})
         ))
-        console.log("____________________DATA FETCH________________________")
-        console.log(arr_question);
-        setQuestionBank(arr_question)
+        setOption(arr_question)
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -67,7 +65,6 @@ function fetchQuestion(setQuestionBank, search, level, subject_id) {
 
 function QuestionAns({ children, ...props }) {
   const [bankData, setBankData] = useState(false);
-  const [QuestionBank, setQuestionBank] = useState([]);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
@@ -183,7 +180,10 @@ function QuestionAns({ children, ...props }) {
                   formData,
                   setFormData,
                   bankData
-                )
+                );
+                console.log("_______________________ANSWER OF QUESTION____________________")
+                console.log(options?.find((option)=> e.target.value === option.label).answers)
+                // el.answers = options?.find((option)=> e.target.value === option.label)?.answers
               }}
               options={options}
               loading={loading}
@@ -262,6 +262,7 @@ function QuestionAns({ children, ...props }) {
               el={el}
               formData={formData}
               setFormData={setFormData}
+              isBankData={bankData}
             />
           </div>
         </div>
@@ -273,8 +274,7 @@ function QuestionAns({ children, ...props }) {
 export default QuestionAns;
 
 function Answers({ ...props }) {
-  const { el, index, focus, setFocused, formData, setFormData } = props;
-
+  const { el, index, focus, setFocused, formData, setFormData, isBankData } = props;
   return (
     <>
       <FormLabel id="demo-controlled-radio-buttons-group">Answers</FormLabel>

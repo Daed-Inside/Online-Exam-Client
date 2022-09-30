@@ -64,10 +64,10 @@ export function EnhancedTableHead(props) {
               <div className="header-value">{headCell.label}</div>
               {headCell.isSort ? (
                 <div
-                  data-sortBy={"sort-" + headCell.label}
+                  data-sortby={"sort-" + headCell.label}
                   className="sort-icon-section"
                   onClick={(e) =>
-                    console.log(e.currentTarget.getAttribute("data-sortBy"))
+                    console.log(e.currentTarget.getAttribute("data-sortby"))
                   }
                 >
                   <svg

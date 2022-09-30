@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./manageClass.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link } from "react-router-dom";
@@ -35,7 +35,32 @@ import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
 import { EnhancedTableHead } from "../../components/table/Header";
 import EditIcon from "@mui/icons-material/Edit";
 import ManageClassDiaglog from "./component/manageClassDialog";
+import { handleApi } from "../../components/utils/utils";
+import constant from "../../constants/constant";
 
+// * fetch class info api
+function fetchData(setTableData, pagingObj, setPagingObj) {
+  axios
+  .get(`${constant.BASEURL}/core/class`, {params: pagingObj})
+  .then((res) => {
+    handleApi(res, (e) => {
+      //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+      setTableData(res.data.data.results)
+      setPagingObj({...pagingObj, totalPages: res.data.data.totalPages, totalElements: res.data.data.totalElements})
+    });
+    // setTimeout(() => {
+    //   alert("Login success");
+    // }, 400);
+  })
+  .catch((error) => {
+    console.log(error);
+    setTimeout(() => {
+      alert(error);
+    }, 400);
+  });
+}
+
+// * main render function
 export default function ManageClass() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("id");
@@ -43,6 +68,25 @@ export default function ManageClass() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [open, setOpen] = React.useState(false);
+  const [tableData, setTableData] = useState([])
+  const [pagingObj, setPagingObj] = useState({
+    page: 1,
+    limit: 10,
+    search: "",
+    totalElements: 0,
+    totalPages: 0,
+    sort_by: "id",
+    sort_type: "ASC"
+  })
+
+  useEffect(() => {
+    fetchData(setTableData, pagingObj, setPagingObj)
+  }, [])
+
+
+  function handleSearch(search_str) {
+    setPagingObj({...pagingObj, search: search_str}, () => fetchData(setTableData, pagingObj, setPagingObj))
+  }
 
   const emptyRows =
     page > 0
@@ -66,7 +110,7 @@ export default function ManageClass() {
             <div className="search-bar-center">
               <TextField
                 label="Search here"
-                onChange={(e) => console.log(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment>
@@ -103,7 +147,7 @@ export default function ManageClass() {
                 <TableBody>
                   {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                  {SampleManageClass.map((row, index) => {
+                  {tableData.map((row, index) => {
                     return <BodyItem row={row} />;
                   })}
                   {emptyRows > 0 && (
@@ -145,7 +189,7 @@ const BodyItem = (props) => {
         <TableCell align="left" className="word-break-cell">
           {row.name}
         </TableCell>
-        <TableCell align="left">{row.student_list.length} members</TableCell>
+        <TableCell align="left">{row.student_count} members</TableCell>
         <TableCell align="left">
           <EditIcon onClick={() => setOpen(true)} className="icon" />
           <DeleteIcon onClick={() => handleDelete(row.id)} className="icon" />

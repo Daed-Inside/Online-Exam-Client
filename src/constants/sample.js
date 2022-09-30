@@ -15,7 +15,7 @@ export const SampleHeader = [
     isSort: true,
     disablePadding: false,
     label: "Name",
-    width: '40%'
+    width: '30%'
   },
   {
     id: "subject",
@@ -24,6 +24,15 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Subject",
+    width: '15%'
+  },
+  {
+    id: "lecturer",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Lecturer",
     width: '20%'
   },
   {
@@ -33,7 +42,7 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Date",
-    width: '20%'
+    width: '15%'
   },
   {
     id: "score",

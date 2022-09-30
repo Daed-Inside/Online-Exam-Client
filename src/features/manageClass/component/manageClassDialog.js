@@ -14,15 +14,63 @@ import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import { FormikError } from "../../../components/FormikError/FormikError";
+import { handleApi } from "../../../components/utils/utils";
+import constant from "../../../constants/constant";
+import axios from "axios";
 import * as Yup from "yup";
 
 export const CreateClassSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
 });
 
+function fetchStudent(setStudentData) {
+  axios
+  .get(`${constant.BASEURL}/core/student`)
+  .then((res) => {
+    handleApi(res, (e) => {
+      //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+      setStudentData(res.data.data)
+    });
+    // setTimeout(() => {
+    //   alert("Login success");
+    // }, 400);
+  })
+  .catch((error) => {
+    console.log(error);
+    setTimeout(() => {
+      alert(error);
+    }, 400);
+  });
+}
+
+function createClass(values) {
+  axios
+  .post(`${constant.BASEURL}/core/class`, {students:values.selectStu, name:values.name})
+  .then((res) => {
+    handleApi(res, (e) => {
+      //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+      setTimeout(() => {
+        alert("Tạo lớp thành công");
+      }, 400);
+    });
+    // setTimeout(() => {
+    //   alert("Login success");
+    // }, 400);
+  })
+  .catch((error) => {
+    console.log(error);
+    setTimeout(() => {
+      alert(error);
+    }, 400);
+  });
+}
+
 function ManageClassDiaglog(props) {
   const { el, open, setOpen } = props;
-  React.useEffect(() => {}, []);
+  const [studentData, setStudentData] = React.useState([])
+  React.useEffect(() => {
+    fetchStudent(setStudentData)
+  }, []);
 
   function firstLoad() {
     if (el) {
@@ -38,14 +86,11 @@ function ManageClassDiaglog(props) {
         aria-labelledby="responsive-dialog-title"
       >
         <Formik
-          initialValues={{searchList: [
-            { id: 7, name: "H" },
-            { id: 8, name: "E" },
-          ], name: el?.name, selectStu: el?.student_list ?? [] }}
+          initialValues={{searchList: studentData, name: el?.name, selectStu: el?.student_list ?? [] }}
           enableReinitialize={true}
           validationSchema={CreateClassSchema}
           onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
+            createClass(values);
           }}
         >
           {({
@@ -209,7 +254,7 @@ const SelectItem = (props) => {
           justifyContent: "space-between",
         }}
       >
-        {item.name}
+        {item.first_name} {item.last_name}
         <AddIcon />
       </div>
     </>
@@ -241,7 +286,7 @@ const RemoveItem = (props) => {
             justifyContent: "space-between",
           }}
         >
-          {item.name}
+          {item.first_name} {item.last_name}
           <CloseIcon />
         </div>
       </>
