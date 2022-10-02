@@ -8,16 +8,17 @@ export function onChangeFormValue(name, value, json, setJson) {
 export function onChangeTime(value, json, setJson) {
   setJson({
     ...json,
-    duration: value,
+    start_date: value,
   });
 }
 
-export function addEl(index, json, setJson) {
+export function addEl(index, json, setJson, is_bank) {
   let newEl = {
     id: uniqueID("question"),
-    question: "",
+    content: "",
     correctAnswers: [],
     type: "radio",
+    is_bank: is_bank,
     answers: [],
   };
   let newJson = json.questions;
@@ -29,25 +30,24 @@ export function addEl(index, json, setJson) {
 }
 
 export function delEl(id, json, setJson) {
-  let newJson = json.data?.filter((e) => e.id !== id);
+  let newJson = json.questions?.filter((e) => e.id !== id);
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
-export function handleChangeQuestion(value, id, json, setJson, isBank) {
-  let newJson = json.data?.map((e) => {
-    if(!isBank){
-      if (e.id === id) {
-        e.question = value;
-        e.question_id = null;
-        e.isBank = isBank
+export function handleChangeQuestion(value, id, json, setJson, is_bank) {
+  let newJson = json.questions?.map((e) => {
+    if (e.id === id) {
+      if(!is_bank){
+        e.content = value;
+      } else {
+        e.content = value.content;
+        e.answers = value.answers;
+        e.question_id = value.id;
+        e.is_bank = is_bank
       }
-    } else {
-      e.question_id = value;
-      e.question = null;
-      e.isBank = isBank
     }
     
     return e;
@@ -55,12 +55,12 @@ export function handleChangeQuestion(value, id, json, setJson, isBank) {
 
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
 export function handleChangeTextAns(value, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+  let newJson = json.questions?.map((e) => {
     if (e.id === id) {
       e.textAns = value;
     }
@@ -69,52 +69,45 @@ export function handleChangeTextAns(value, id, json, setJson) {
 
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
 export function handleChangeType(value, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+  let newJson = json.questions?.map((e) => {
     if (e.id === id) {
       e.type = value;
-      if (value === "text") {
-        e.textAns = "";
-      }
     }
     return e;
   });
 
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
-export function handleChangeQuesType(value, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+export function handleChangeDifficult(value, id, json, setJson) {
+  let newJson = json.questions?.map((e) => {
     if (e.id === id) {
-      e.questType = value;
-      if (value === "text") {
-        e.textAns = "";
-      }
+      e.level = value;
     }
     return e;
   });
 
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
 export function addChangeAns(qsId, json, setJson) {
   let newAns = {
     id: uniqueID("ans"),
-    value: "",
+    content: "",
+    is_correct: false
   };
-  let newJson = json.data?.map((e) => {
-    console.log("qsId", qsId);
-    console.log("e.id", e.id);
+  let newJson = json.questions?.map((e) => {
     if (e.id === qsId) {
       e.answers?.push(newAns);
     }
@@ -123,67 +116,82 @@ export function addChangeAns(qsId, json, setJson) {
   console.log(json);
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
 export function handleChangeAns(value, qsId, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+  let newJson = json.questions?.map((e) => {
     if (e.id === qsId) {
-      e.answers?.map((an) => {
+      e.answers = e.answers?.map((an) => {
         if (an.id === id) {
-          an.value = value;
+          an.content = value;
         }
+        return an
       });
     }
     return e;
   });
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
 export function delAns(qsId, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+  let newJson = json.questions?.map((e) => {
     if (e.id === qsId) {
-      e.correctAnswers = e.correctAnswers?.filter((el) => el.id !== id);
+      // e.correctAnswers = e.correctAnswers?.filter((el) => el.id !== id);
       e.answers = e.answers?.filter((el) => el.id !== id);
     }
     return e;
   });
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
-export function addCorrectAns(value, qsId, json, setJson) {
-  let newJson = json.data?.map((e) => {
-    if (e.id === qsId) {
-      e.correctAnswers?.push(value);
-    }
-    return e;
-  });
-
-  setJson({
-    ...json,
-    data: newJson,
-  });
+export function addCorrectAns(id, qsId, json, setJson, isBank) {
+  if (!isBank) {
+    let newJson = json.questions?.map((e) => {
+      if (e.id === qsId) {
+        e.answers = e.answers?.map((an) => {
+          if (an.id === id) {
+            an.is_correct = true;
+          }
+          return an
+        });
+      }
+      return e;
+    });
+  
+    setJson({
+      ...json,
+      questions: newJson,
+    });
+  }
 }
 
-export function delCorrectAns(qsId, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
-    if (e.id === qsId) {
-      e.correctAnswers = e.correctAnswers?.filter((el) => el.id !== id);
-    }
-    return e;
-  });
-
-  setJson({
-    ...json,
-    data: newJson,
-  });
+export function delCorrectAns(qsId, id, json, setJson, isBank) {
+  if (!isBank) {
+    let newJson = json.questions?.map((e) => {
+      if (e.id === qsId) {
+        e.answers = e.answers?.map((an) => {
+          if (an.id === id) {
+            an.is_correct = false;
+          }
+          return an
+        });
+      }
+      return e;
+    });
+  
+    setJson({
+      ...json,
+      questions: newJson,
+    });
+  }
 }
 
 export const uniqueID = (prefix = "default") => {

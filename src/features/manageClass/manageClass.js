@@ -83,9 +83,14 @@ export default function ManageClass() {
     fetchData(setTableData, pagingObj, setPagingObj)
   }, [])
 
+  useEffect(() => {
+    fetchData(setTableData, pagingObj, setPagingObj)
+  }, [pagingObj.search, pagingObj.page, pagingObj.limit, pagingObj.sort_by, pagingObj.sort_type])
 
   function handleSearch(search_str) {
-    setPagingObj({...pagingObj, search: search_str}, () => fetchData(setTableData, pagingObj, setPagingObj))
+    let newPagingObj = {...pagingObj}
+    newPagingObj.search = search_str
+    setPagingObj(newPagingObj)
   }
 
   const emptyRows =

@@ -20,7 +20,6 @@ function fetchSubject(setSubject) {
     .get(`${constant.BASEURL}/core/subject`)
     .then((res) => {
       handleApi(res, (e) => {
-        //localStorage.setItem(constant.localStorage.EMAIL, e.email);
         setSubject(res.data.data)
       });
       // setTimeout(() => {
@@ -35,17 +34,56 @@ function fetchSubject(setSubject) {
     });
 }
 
+function createTestAPI(reqBody) {
+  axios
+    .post(`${constant.BASEURL}/core/exam-template`, reqBody)
+    .then((res) => {
+      handleApi(res, (e) => {
+        setTimeout(() => {
+        alert("Congrat, create successfully");
+      }, 400);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      setTimeout(() => {
+        alert(error);
+      }, 400);
+    });
+}
+
+function fetchEditTemplate(id, setFormData) {
+  axios
+    .get(`${constant.BASEURL}/core/exam-template/${id}`)
+    .then((res) => {
+      handleApi(res, (e) => {
+        setFormData(res.data.data)
+      });
+      // setTimeout(() => {
+      //   alert("Login success");
+      // }, 400);
+    })
+    .catch((error) => {
+      console.log(error);
+      setTimeout(() => {
+        alert(error);
+      }, 400);
+    });
+}
+
+
 function CreateTest(props) {
   const [formData, setFormData] = useState(fakeData);
   const [subject, setSubject] = useState([])
   const [isEdit, setIsEdit] = useState(false);
   const [focus, setFocused] = useState(null);
-  const { id } = useParams();
-
+  // const { id } = useParams();
+  const id = 3
   useEffect(() => {
     if (id) {
       setIsEdit(true);
-      loadFormById(id);
+      fetchEditTemplate(id, setFormData);
+      fetchSubject(setSubject)
     } else {
       setIsEdit(false);
       fetchSubject(setSubject)
@@ -116,7 +154,7 @@ function CreateTest(props) {
             id="title"
             placeholder="Input name"
             variant="standard"
-            value={formData.title}
+            value={formData.name}
             onChange={(e) => {
               onChangeFormValue("name", e.target.value, formData, setFormData);
             }}
@@ -143,7 +181,7 @@ function CreateTest(props) {
                 <DateTimePicker
                   style={{ width: "100%" }}
                   label="Date"
-                  value={formData.duration}
+                  value={formData.start_date}
                   onChange={(e) => {
                     onChangeTime(e, formData, setFormData);
                   }}
@@ -219,9 +257,12 @@ function CreateTest(props) {
       <Button
           onClick={() => {
             if (isEdit) {
-              handleUpdate();
+              // handleUpdate();
+              console.log("_________FORM DATA_____________")
+              console.log(formData)
             } else {
-              handleCreate();
+              // handleCreate();
+              createTestAPI(formData)
             }
           }}
           variant="contained"

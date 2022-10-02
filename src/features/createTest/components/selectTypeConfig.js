@@ -4,12 +4,12 @@ export const selectType = [
   //   label: "Văn bản",
   // },
   {
-    value: "radio",
-    label: "One",
+    value: 1,
+    label: "Single",
   },
   {
-    value: "checkbox",
-    label: "Many",
+    value: 2,
+    label: "Multiple",
   },
 ];
 

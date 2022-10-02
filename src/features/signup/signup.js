@@ -25,7 +25,7 @@ function handleSubmit(values, navigate) {
   };
 
   axios
-    .post(`${constant.BASEURL}/keycloak-service/createUser`, body)
+    .post(`${constant.BASEURL}/core/register`, body)
     .then((res) => {
       handleApi(res, (e) => {
         setTimeout(() => {

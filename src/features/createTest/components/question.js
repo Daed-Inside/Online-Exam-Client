@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import {
   handleChangeQuestion,
   handleChangeType,
-  handleChangeQuesType,
+  handleChangeDifficult,
   handleChangeAns,
   addChangeAns,
   containsObject,
@@ -64,12 +64,13 @@ function fetchQuestion(setOption, search, level, subject_id) {
 }
 
 function QuestionAns({ children, ...props }) {
-  const [bankData, setBankData] = useState(false);
+  // const [bankData, setBankData] = useState(false);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
   const { el, index, focus, setFocused, formData, setFormData } = props;
-
+  const [defaultQuestion, setDefaultQuestion] = useState({label: el.content, id: el.id});
+  const bankData = el.is_bank
   useEffect(() => {
     let active = true;
 
@@ -118,22 +119,24 @@ function QuestionAns({ children, ...props }) {
           <AddIcon
             className="create_test-icon"
             onClick={() => {
-              addEl(index + 1, formData, setFormData);
+              addEl(index + 1, formData, setFormData, false);
             }}
           />
-          {
+          {/* {
             bankData === false ? <AccountBalanceWalletOutlinedIcon
               className="create_test-icon"
               onClick={() => {
                 setBankData(!bankData);
               }}
-            /> : <AccountBalanceWalletIcon
+            /> : <AccountBalanceWalletIcon */}
+            <AccountBalanceWalletIcon
               className="create_test-icon"
               onClick={() => {
-                setBankData(!bankData);
+                // setBankData(!bankData);
+                addEl(index + 1, formData, setFormData, true);
               }}
             />
-          }
+          {/* } */}
 
           <DeleteIcon
             className="create_test-icon"
@@ -155,7 +158,7 @@ function QuestionAns({ children, ...props }) {
                     el.id,
                     formData,
                     setFormData,
-                    bankData
+                    false
                   )
                 }
                 key={el.id}
@@ -165,27 +168,35 @@ function QuestionAns({ children, ...props }) {
               id="asynchronous-demo"
               sx={{ width: 300 }}
               open={open}
+              value={defaultQuestion}
               onOpen={() => {
                 setOpen(true);
               }}
               onClose={() => {
                 setOpen(false);
               }}
-              isOptionEqualToValue={(option, value) => option.label === value.label}
-              getOptionLabel={(option) => option.label}
-              onSelect={(e)=>{
+              isOptionEqualToValue={(options, value) => options.id === value.id}
+              getOptionLabel={(options) => options.label}
+              // value={(option) => option.id}
+              onChange={(e, value)=>{
+                setDefaultQuestion(value)
                 handleChangeQuestion(
-                  e.target.value === "" ? null : options?.find((option)=> e.target.value === option.label)?.value,
+                  value.id === "" ? null : options?.find((option)=> value.id === option.id),
                   el.id,
                   formData,
                   setFormData,
-                  bankData
+                  true
                 );
-                console.log("_______________________ANSWER OF QUESTION____________________")
-                console.log(options?.find((option)=> e.target.value === option.label).answers)
                 // el.answers = options?.find((option)=> e.target.value === option.label)?.answers
               }}
               options={options}
+              renderOption={(props, option) => {
+                return (
+                  <li {...props} key={option.id}>
+                    {option.label}
+                  </li>
+                );
+              }}
               loading={loading}
               renderInput={(params) => (
                 <TextField
@@ -234,9 +245,9 @@ function QuestionAns({ children, ...props }) {
                 id="outlined-select-currency-native"
                 select
                 label="Choose difficulty"
-                value={el.questType}
+                value={el.question_type}
                 onChange={(e) => {
-                  handleChangeQuesType(
+                  handleChangeDifficult(
                     e.target.value,
                     el.id,
                     formData,
@@ -262,7 +273,6 @@ function QuestionAns({ children, ...props }) {
               el={el}
               formData={formData}
               setFormData={setFormData}
-              isBankData={bankData}
             />
           </div>
         </div>
@@ -274,14 +284,14 @@ function QuestionAns({ children, ...props }) {
 export default QuestionAns;
 
 function Answers({ ...props }) {
-  const { el, index, focus, setFocused, formData, setFormData, isBankData } = props;
+  const { el, index, focus, setFocused, formData, setFormData } = props;
+  // console.log("_____________________IS BANK DATA_____________________________")
+  // console.log(el.is_bank)
   return (
     <>
       <FormLabel id="demo-controlled-radio-buttons-group">Answers</FormLabel>
-      {el.type !== "text" &&
-        el.answers?.map((an) => {
+      {el.answers?.map((an) => {
           return (
-            <>
               <div key={an.id} className="create_test-ans">
                 <div className="create_test-ans_input">
                   {el.type === "radio" ? (
@@ -297,7 +307,8 @@ function Answers({ ...props }) {
                   )}
                   <TextField
                     placeholder="Nhập câu trả lời"
-                    value={an.value}
+                    value={an.content}
+                    disabled={el.isBank}
                     onChange={(e) => {
                       handleChangeAns(
                         e.target.value,
@@ -312,11 +323,11 @@ function Answers({ ...props }) {
                     variant="standard"
                   />
                 </div>
-                {!containsObject(an, el.correctAnswers) ? (
+                {!an.is_correct ? (
                   <Tooltip title="Đánh dấu câu trả lời đúng" arrow>
                     <StarOutlineIcon
                       onClick={() =>
-                        addCorrectAns(an, el.id, formData, setFormData)
+                        addCorrectAns(an.id, el.id, formData, setFormData, el.is_bank)
                       }
                       style={{
                         marginTop: "auto",
@@ -330,7 +341,7 @@ function Answers({ ...props }) {
                   <Tooltip title="Xóa đánh dấu" arrow>
                     <StarIcon
                       onClick={() =>
-                        delCorrectAns(el.id, an.id, formData, setFormData)
+                        delCorrectAns(el.id, an.id, formData, setFormData, el.is_bank)
                       }
                       style={{
                         marginTop: "auto",
@@ -340,6 +351,7 @@ function Answers({ ...props }) {
                     />
                   </Tooltip>
                 )}
+                {el.is_bank ? (<></>) : (<>
                 <Tooltip title="Xóa câu trả lời" arrow>
                   <ClearIcon
                     onClick={() => {
@@ -351,12 +363,11 @@ function Answers({ ...props }) {
                       cursor: "pointer",
                     }}
                   />
-                </Tooltip>
+                </Tooltip></>)}
               </div>
-            </>
           );
         })}
-      {el.type !== "text" && (
+      {!el.is_bank && (
         <Button
           onClick={() => {
             console.log(el.id);
@@ -366,18 +377,6 @@ function Answers({ ...props }) {
         >
           Thêm
         </Button>
-      )}
-      {el.type === "text" && (
-        <TextField
-          multiline
-          placeholder="Nhập câu trả lời"
-          value={el.textAns}
-          onChange={(e) => {
-            handleChangeTextAns(e.target.value, el.id, formData, setFormData);
-          }}
-          style={{ margin: "auto 0" }}
-          variant="standard"
-        />
       )}
     </>
   );
