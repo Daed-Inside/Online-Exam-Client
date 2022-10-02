@@ -78,8 +78,19 @@ export default function MyTest() {
   useEffect(() => {
     fetchData(setTableData, pagingObj, setPagingObj)
   }, [])
+
+  useEffect(() => {
+    fetchData(setTableData, pagingObj, setPagingObj)
+  }, [pagingObj.search])
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - SampleMyTest.length) : 0;
+
+  function handleSearch(searchStr) {
+    let newPaging = {...pagingObj}
+    newPaging.search = searchStr
+    setPagingObj(newPaging)
+  }
 
   return (
     <>
@@ -96,7 +107,7 @@ export default function MyTest() {
             <div className="search-bar-center">
               <TextField
                 label="Search here"
-                onChange={(e) => console.log(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment>
