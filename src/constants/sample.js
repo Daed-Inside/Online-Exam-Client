@@ -55,6 +55,63 @@ export const SampleHeader = [
   },
 ];
 
+export const myTemplateHeader = [
+  {
+    id: "id",
+    middle: true,
+    numeric: false,
+    isSort: true,
+    disablePadding: false,
+    label: "id",
+    width: '10%'
+  },
+  {
+    id: "name",
+    middle: false,
+    numeric: false,
+    isSort: true,
+    disablePadding: false,
+    label: "Name",
+    width: '20%'
+  },
+  {
+    id: "subject",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Subject",
+    width: '15%'
+  },
+  {
+    id: "start_date",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Start date",
+    width: '15%'
+  },
+  {
+    id: "created_date",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Score",
+    width: '20%'
+  },
+  {
+    id: "action",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Score",
+    width: '20%'
+  }
+]
+
 export const SampleMyTest = [
     {id: "1", name: "Physical Test first semester class 3A", subject: "Physical", date: "New Dawn", score: 20 },
     {id: "2", name: "test 1", subject: "Physical", date: "New Dawn", score: 19 },

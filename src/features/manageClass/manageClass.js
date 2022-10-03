@@ -1,42 +1,27 @@
-import React, { useState, useEffect } from "react";
-import "./manageClass.css";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Link } from "react-router-dom";
-import ImageStudy from "../../assets/images/login_test_image.png";
-import { FormikError } from "../../components/FormikError/FormikError.js";
-import { SignInSchema } from "../../constants/validation";
-import axios from "axios";
-import { alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SearchIcon from "@mui/icons-material/Search";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
-import Button from "@mui/material/Button";
-import SearchIcon from "@mui/icons-material/Search";
-import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
-import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
+import Typography from "@mui/material/Typography";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { EnhancedTableHead } from "../../components/table/Header";
-import EditIcon from "@mui/icons-material/Edit";
-import ManageClassDiaglog from "./component/manageClassDialog";
 import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
+import ManageClassDiaglog from "./component/manageClassDialog";
+import "./manageClass.css";
+import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
+import Pagination from "@mui/material/Pagination";
 
 // * fetch class info api
 function fetchData(setTableData, pagingObj, setPagingObj) {
@@ -137,6 +122,7 @@ export default function ManageClass() {
             className="table-paper"
             sx={{ width: "100%", mb: 2, height: "100%" }}
           >
+            <div className="table-data-section">
             <TableContainer>
               <Table
                 sx={{ minWidth: 750 }}
@@ -167,13 +153,40 @@ export default function ManageClass() {
                 </TableBody>
               </Table>
             </TableContainer>
-            <TablePagination
+            </div>
+            {/* <TablePagination
               rowsPerPageOptions={[5, 10]}
               component="div"
               count={SampleManageClass.length}
               rowsPerPage={rowsPerPage}
               page={page}
-            />
+            /> */}
+            <div className="table-footer-section">
+            <div
+              style={{
+                flex: 1,
+                float: "left",
+                marginTop: "10px",
+                marginLeft: "10px",
+              }}
+            >
+              Total items: {pagingObj.totalElements}
+            </div>
+            <div
+              style={{
+                flex: 1,
+                float: "right",
+                marginTop: "10px",
+                marginRight: "10px",
+              }}
+            >
+              <Pagination
+                count={pagingObj.totalPages}
+                page={pagingObj.page}
+                onChange={(e, value) => setPagingObj({...pagingObj, page: value})}
+              />
+            </div>
+            </div>
           </Paper>
         </div>
       </div>

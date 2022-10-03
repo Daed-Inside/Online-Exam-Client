@@ -5,8 +5,11 @@ import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import QuestionAns from "./components/question";
 import Button from "@mui/material/Button";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { onChangeFormValue, onChangeTime } from "./libs/functions";
 import { selectType } from "./components/selectTypeConfig";
+import {showToast} from "../../components/toast/toast.js"
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -14,13 +17,12 @@ import constant from "../../constants/constant";
 import { handleApi } from "../../components/utils/utils";
 import axios from "axios";
 
-
 function fetchSubject(setSubject) {
   axios
     .get(`${constant.BASEURL}/core/subject`)
     .then((res) => {
       handleApi(res, (e) => {
-        setSubject(res.data.data)
+        setSubject(res.data.data);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -40,8 +42,8 @@ function createTestAPI(reqBody) {
     .then((res) => {
       handleApi(res, (e) => {
         setTimeout(() => {
-        alert("Congrat, create successfully");
-      }, 400);
+          alert("Congrat, create successfully");
+        }, 400);
       });
     })
     .catch((error) => {
@@ -57,7 +59,7 @@ function fetchEditTemplate(id, setFormData) {
     .get(`${constant.BASEURL}/core/exam-template/${id}`)
     .then((res) => {
       handleApi(res, (e) => {
-        setFormData(res.data.data)
+        setFormData(res.data.data);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -71,62 +73,25 @@ function fetchEditTemplate(id, setFormData) {
     });
 }
 
-
 function CreateTest(props) {
   const [formData, setFormData] = useState(fakeData);
-  const [subject, setSubject] = useState([])
+  const [subject, setSubject] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [focus, setFocused] = useState(null);
-  // const { id } = useParams();
-  const id = 3
+  const { id } = useParams();
+  console.log("YOUR UPDATE ID")
+  console.log(typeof id)
+  // const id = 3
   useEffect(() => {
-    if (id) {
+    if (id && id !== "null") {
       setIsEdit(true);
       fetchEditTemplate(id, setFormData);
-      fetchSubject(setSubject)
+      fetchSubject(setSubject);
     } else {
       setIsEdit(false);
-      fetchSubject(setSubject)
+      fetchSubject(setSubject);
     }
   }, []);
-
-  function loadFormById(id) {
-    axios
-      .get(`${constant.BASEURL}/core-service/exam/` + id, {
-        headers: {
-          Authorization:
-            "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
-        },
-      })
-      .then((res) => {
-        handleApi(res, (e) => {
-          //setFormData(e.formData);
-        });
-      })
-      .catch((error) => {
-        setTimeout(() => {
-          alert(error);
-        }, 400);
-      });
-  }
-
-  function handleUpdate(id) {
-    axios
-      .put(`${constant.BASEURL}/core-service/exam/` + id, formData, {
-        headers: {
-          Authorization:
-            "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
-        },
-      })
-      .then((res) => {
-        handleApi(res, (e) => {});
-      })
-      .catch((error) => {
-        setTimeout(() => {
-          alert(error);
-        }, 400);
-      });
-  }
 
   function handleCreate() {
     axios
@@ -230,7 +195,6 @@ function CreateTest(props) {
                 );
               }}
               style={{ height: 45, width: "100%" }}
-              
               inputProps={{
                 style: {
                   height: 45,
@@ -239,7 +203,6 @@ function CreateTest(props) {
               }}
             />
           </div>
-          
         </div>
         {formData?.questions?.map((el, index) => (
           <QuestionAns
@@ -254,21 +217,26 @@ function CreateTest(props) {
         ))}
       </div>
       <div className="create_test-footer">
-      <Button
+        <Button
           onClick={() => {
             if (isEdit) {
               // handleUpdate();
-              console.log("_________FORM DATA_____________")
-              console.log(formData)
+              console.log("_________FORM DATA_____________");
+              console.log(formData);
             } else {
               // handleCreate();
-              createTestAPI(formData)
+              <Alert severity="success">
+                <AlertTitle>Success</AlertTitle>
+                This is a success alert — <strong>check it out!</strong>
+              </Alert>;
+              // createTestAPI(formData);
             }
           }}
           variant="contained"
         >
+          <div id="toast"></div>
           Save
-      </Button>
+        </Button>
       </div>
     </>
   );

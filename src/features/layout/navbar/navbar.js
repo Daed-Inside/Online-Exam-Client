@@ -20,10 +20,10 @@ import BookIcon from "../../../assets/images/book.png";
 import { useNavigate } from "react-router-dom";
 
 const pages = [
-  { label: "Create Test", url: "/CreateTest" },
-  { label: "Do Test", url: "/DoTest" },
-  { label: "My Test", url: "/MyTest" },
-  { label: "Manage Class", url: "/ManageClass" },
+  { label: "Create Test", url: "/manage/template" },
+  { label: "Do Test", url: "/test/do" },
+  { label: "My Test", url: "/test/my" },
+  { label: "Manage Class", url: "/manage/class" },
 ];
 const settings = ["Profile", "Dashboard"];
 
