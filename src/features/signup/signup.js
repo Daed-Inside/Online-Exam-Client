@@ -19,8 +19,8 @@ function handleSubmit(values, navigate) {
     address: values.address,
     username: values.email,
     password: values.password,
-    firstname: "Khiem",
-    lastname: "Pham",
+    first_name: "Khiem",
+    last_name: "Pham",
     role: values.role,
   };
 
@@ -55,11 +55,11 @@ function SignUp() {
             <Formik
               initialValues={{
                 email: "",
-                password: "",
-                confirmPass: "",
+                first_name: "",
+                last_name: "",
                 phone: "",
                 address: "",
-                role: "USER",
+                role: 1,
               }}
               enableReinitialize={true}
               validationSchema={SignUpSchema}
@@ -91,9 +91,9 @@ function SignUp() {
                   <div className="input-section">
                     <Field
                       className="signup-input"
-                      type="password"
-                      name="password"
-                      placeholder="Password"
+                      type="text"
+                      name="first_name"
+                      placeholder="First name"
                     />
                     {errors.password ? (
                       FormikError(errors, "password")
@@ -144,8 +144,8 @@ function SignUp() {
                       label="Role"
                       onChange={handleChange}
                     >
-                      <MenuItem value={"TEACHER"}>Teacher</MenuItem>
-                      <MenuItem value={"STUDENT"}>Student</MenuItem>
+                      <MenuItem value={1}>Student</MenuItem>
+                      <MenuItem value={2}>Lecturer</MenuItem>
                     </Select>
                   </div>
                   {/* <ErrorMessage name="password" component="div" /> */}

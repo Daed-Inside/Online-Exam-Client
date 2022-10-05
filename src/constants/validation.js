@@ -5,15 +5,19 @@ const phoneRegExp =
 
 export const SignUpSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string()
+  first_name: Yup.string()
     .min(2, "Too short")
     .max(50, "Too Long")
     .required("Required"),
-  confirmPass: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
+  last_name: Yup.string()
     .min(2, "Too short")
     .max(50, "Too Long")
     .required("Required"),
+  // confirmPass: Yup.string()
+  //   .oneOf([Yup.ref("password"), null], "Passwords must match")
+  //   .min(2, "Too short")
+  //   .max(50, "Too Long")
+  //   .required("Required"),
   address: Yup.string()
     .min(2, "Too short")
     .max(50, "Too Long")

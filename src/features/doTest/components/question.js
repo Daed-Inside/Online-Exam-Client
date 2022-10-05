@@ -5,7 +5,7 @@ import {
   handleChangeTextAns,
   onCheckRadioType,
   handleChangeCheckBoxType,
-  onCheckHasChoose,
+  onCheckis_answered,
 } from "../libs/functions";
 import Radio from "@mui/material/Radio";
 import FormLabel from "@mui/material/FormLabel";
@@ -16,12 +16,12 @@ function QuestionAns({ children, ...props }) {
 
   return (
     <>
-      <div key={el.id} id={el.id} className="do_test-el">
+      <div key={el.id} id={`question-${el.id}`} className="do_test-el">
         <div className="do_test-group">
           <div className="do_test-group_qa">
             <div className="do_test-area_question">
               <h3>
-                Question {index + 1}: {el.question}
+                Question {index + 1}: {el.content}
               </h3>
             </div>
           </div>
@@ -45,62 +45,49 @@ function Answers({ ...props }) {
   const { el, index, focus, setFocused, formData, setFormData } = props;
   return (
     <>
-      <FormLabel id="demo-controlled-radio-buttons-group">Answers</FormLabel>
-      {el.type !== "text" &&
-        el.answers?.map((an) => {
-          return (
-            <div key={an.id} className="do_test-ans">
-              {el.type === "radio" ? (
-                <>
-                  <div
-                    onClick={() =>
-                      handleChangeRadioType(el.id, an.id, formData, setFormData)
-                    }
-                    className="do_test-ans_input"
-                  >
-                    <Radio
-                      style={{ paddingLeft: 0, paddingBottom: 0 }}
-                      checked={onCheckRadioType(el.id, an.id, formData)}
-                    />
-                    <p>{an.value}</p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div
-                    onClick={() =>
-                      handleChangeCheckBoxType(
-                        el.id,
-                        an.id,
-                        formData,
-                        setFormData
-                      )
-                    }
-                    className="do_test-ans_input"
-                  >
-                    <Checkbox
-                      style={{ paddingLeft: 0, paddingBottom: 0 }}
-                      checked={onCheckRadioType(el.id, an.id, formData)}
-                    />
-                    <p>{an.value}</p>
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })}
-      {el.type === "text" && (
-        <TextField
-          multiline
-          placeholder="Nhập câu trả lời"
-          value={el.textAns}
-          onChange={(e) => {
-            handleChangeTextAns(e.target.value, el.id, formData, setFormData);
-          }}
-          style={{ margin: "auto 0" }}
-          variant="standard"
-        />
-      )}
+      {/* <FormLabel id="demo-controlled-radio-buttons-group"></FormLabel> */}
+      {el.answers?.map((an) => {
+        return (
+          <div key={an.id} className="do_test-ans">
+            {el.question_type === 1 ? (
+              <>
+                <div
+                  onClick={() =>
+                    handleChangeRadioType(el.id, an.id, formData, setFormData)
+                  }
+                  className="do_test-ans_input"
+                >
+                  <Radio
+                    style={{ paddingLeft: 0, paddingBottom: 0 }}
+                    checked={onCheckRadioType(el.id, an.id, formData)}
+                  />
+                  <p className="ans_text">{an.content}</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  onClick={() =>
+                    handleChangeCheckBoxType(
+                      el.id,
+                      an.id,
+                      formData,
+                      setFormData
+                    )
+                  }
+                  className="do_test-ans_input"
+                >
+                  <Checkbox
+                    style={{ paddingLeft: 0, paddingBottom: 0 }}
+                    checked={onCheckRadioType(el.id, an.id, formData)}
+                  />
+                  <p className="ans_text">{an.content}</p>
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })}
     </>
   );
 }

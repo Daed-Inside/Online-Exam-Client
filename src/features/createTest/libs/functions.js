@@ -17,7 +17,8 @@ export function addEl(index, json, setJson, is_bank) {
     id: uniqueID("question"),
     content: "",
     correctAnswers: [],
-    type: "radio",
+    question_type: 1,
+    level: 2,
     is_bank: is_bank,
     answers: [],
   };
@@ -40,16 +41,16 @@ export function delEl(id, json, setJson) {
 export function handleChangeQuestion(value, id, json, setJson, is_bank) {
   let newJson = json.questions?.map((e) => {
     if (e.id === id) {
-      if(!is_bank){
+      if (!is_bank) {
         e.content = value;
       } else {
         e.content = value.content;
         e.answers = value.answers;
         e.question_id = value.id;
-        e.is_bank = is_bank
+        e.is_bank = is_bank;
       }
     }
-    
+
     return e;
   });
 
@@ -105,7 +106,7 @@ export function addChangeAns(qsId, json, setJson) {
   let newAns = {
     id: uniqueID("ans"),
     content: "",
-    is_correct: false
+    is_correct: false,
   };
   let newJson = json.questions?.map((e) => {
     if (e.id === qsId) {
@@ -127,7 +128,7 @@ export function handleChangeAns(value, qsId, id, json, setJson) {
         if (an.id === id) {
           an.content = value;
         }
-        return an
+        return an;
       });
     }
     return e;
@@ -160,12 +161,12 @@ export function addCorrectAns(id, qsId, json, setJson, isBank) {
           if (an.id === id) {
             an.is_correct = true;
           }
-          return an
+          return an;
         });
       }
       return e;
     });
-  
+
     setJson({
       ...json,
       questions: newJson,
@@ -181,12 +182,12 @@ export function delCorrectAns(qsId, id, json, setJson, isBank) {
           if (an.id === id) {
             an.is_correct = false;
           }
-          return an
+          return an;
         });
       }
       return e;
     });
-  
+
     setJson({
       ...json,
       questions: newJson,

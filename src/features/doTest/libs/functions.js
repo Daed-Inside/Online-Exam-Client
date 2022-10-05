@@ -84,7 +84,7 @@ export function handleChangeType(value, id, json, setJson) {
 export function handleChangeQuesType(value, id, json, setJson) {
   let newJson = json.data?.map((e) => {
     if (e.id === id) {
-      e.questType = value;
+      e.question_type = value;
       if (value === "text") {
         e.textAns = "";
       }
@@ -106,23 +106,6 @@ export function addChangeAns(qsId, json, setJson) {
   let newJson = json.data?.map((e) => {
     if (e.id === qsId) {
       e.answers?.push(newAns);
-    }
-    return e;
-  });
-  setJson({
-    ...json,
-    data: newJson,
-  });
-}
-
-export function handleChangeAns(value, qsId, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
-    if (e.id === qsId) {
-      e.answers?.map((an) => {
-        if (an.id === id) {
-          an.value = value;
-        }
-      });
     }
     return e;
   });
@@ -199,25 +182,26 @@ export function containsObject(obj, list) {
 }
 
 export function handleChangeRadioType(qsId, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+  let newJson = json.questions?.map((e) => {
     if (e.id === qsId) {
-      e.hasChoose = true;
-      e.selectAnswers = e.answers?.filter((el) => el.id === id);
+      e.is_answered = true;
+      e.selected = [];
+      e.selected.push(id);
     }
     return e;
   });
 
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
 export function onCheckRadioType(qsId, id, json) {
   let isCheck = null;
-  json.data?.map((e) => {
+  json.questions?.map((e) => {
     if (e.id === qsId) {
-      isCheck = e.selectAnswers?.find((el) => el.id === id);
+      isCheck = e.selected?.find((el) => el === id);
     }
     return e;
   });
@@ -226,20 +210,19 @@ export function onCheckRadioType(qsId, id, json) {
 }
 
 export function handleChangeCheckBoxType(qsId, id, json, setJson) {
-  let newJson = json.data?.map((e) => {
+  let newJson = json.questions?.map((e) => {
     if (e.id === qsId) {
-      e.hasChoose = true;
-      let newSelectAns = [];
-      let existedAns = e.selectAnswers?.find((el) => el.id === id);
+      e.is_answered = true;
+      let existedAns = e.selected?.find((el) => el === id);
       if (existedAns) {
-        e.selectAnswers = e.selectAnswers.filter((e) => e.id !== id);
+        e.selected = e.selected.filter((el) => el !== id);
+        if (e.selected.length === 0) e.is_answered = false;
       } else {
-        e.selectAnswers.push(e.answers?.find((el) => el.id === id));
-        newSelectAns = e.selectAnswers.filter(
-          (v, i, a) =>
-            a.findIndex((t) => t.id === v.id && t.value === v.value) === i
-        );
-        e.selectAnswers = newSelectAns;
+        if (e.selected) {
+          e.selected.push(id);
+        } else {
+          e.selected = [id];
+        }
       }
     }
     return e;
@@ -247,15 +230,15 @@ export function handleChangeCheckBoxType(qsId, id, json, setJson) {
 
   setJson({
     ...json,
-    data: newJson,
+    questions: newJson,
   });
 }
 
-export function onCheckHasChoose(qsId, json) {
+export function onCheckis_answered(qsId, json) {
   let isCheck = null;
   json.data?.map((e) => {
     if (e.id === qsId) {
-      isCheck = e.hasChoose;
+      isCheck = e.is_answered;
     }
     return e;
   });

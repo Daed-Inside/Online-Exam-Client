@@ -2,6 +2,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import InputAdornment from "@mui/material/InputAdornment";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -21,6 +22,7 @@ import { myTemplateHeader, SampleMyTest } from "../../constants/sample";
 import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import "./mytemplate.css";
+import AddTemplateClassDiaglog from "./component/manageTemplClass";
 
 function fetchData(setTableData, pagingObj, setPagingObj) {
   axios
@@ -55,9 +57,10 @@ export default function MyTemplate() {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [tableData, setTableData] = useState([]);
+  const [open, setOpen] = React.useState(false);
   const [pagingObj, setPagingObj] = useState({
     page: 1,
-    limit: 2,
+    limit: 7,
     search: "",
     totalElements: 0,
     totalPages: 0,
@@ -155,11 +158,15 @@ export default function MyTemplate() {
                             <EditIcon
                               onClick={(e) =>
                                 navigate(
-                                  `/manage/template/${e.target.parentElement.parentElement.getAttribute(
+                                  `/template/edit/${e.target.parentElement.parentElement.getAttribute(
                                     "id"
                                   )}`
                                 )
                               }
+                              className="icon"
+                            />
+                            <AddCircleOutlineOutlinedIcon
+                              onClick={() => setOpen(!open)}
                               className="icon"
                             />
                             <DeleteIcon
@@ -221,6 +228,7 @@ export default function MyTemplate() {
           </Paper>
         </div>
       </div>
+      <AddTemplateClassDiaglog open={open} setOpen={setOpen} />
     </>
   );
 }

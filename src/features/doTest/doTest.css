@@ -157,3 +157,40 @@
 .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root {
   padding: 0 !important;
 }
+
+.ans_text {
+  color: #262626;
+  font-size: 15px;
+}
+
+.header-text {
+  display: inline-block;
+  color: #262626;
+  font-size: 16px;
+}
+
+.test_name {
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+.test-additional-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.test-additional-body {
+  flex: 1;
+  text-align: center;
+}
+
+.header-body-division {
+  height: 1px;
+  width: 100%;
+  margin-top: 10px;
+  background-color: #000000;
+}
+
+.do_test-body {
+  width: 100%;
+}

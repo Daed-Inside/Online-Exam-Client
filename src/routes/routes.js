@@ -11,7 +11,7 @@ import SignUp from "../features/signup/signup";
 import NavBar from "../features/layout/navbar/navbar";
 import Footer from "../features/layout/footer/footer";
 import MyTest from "../features/mytest/mytest";
-import MyTemplate from "../features/mytemplate/mytemplate"
+import MyTemplate from "../features/mytemplate/mytemplate";
 import Personal from "../features/personal/personal";
 import CreateTest from "../features/createTest/createTest";
 import ManageClass from "../features/manageClass/manageClass";
@@ -44,14 +44,13 @@ function Routings({ children, ...renderProps }) {
       {true ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route exact path="/manage/template" element={<CreateTest />} />
-          <Route exact path="/manage/template/:id" element={<CreateTest />} />
-          <Route exact path="/template/my" element={<MyTemplate />} />
-          <Route path="/test/do" element={<DoTest />} />
-          <Route path="/test/my" element={<MyTest />} />
+          <Route exact path="/template/create" element={<CreateTest />} />
+          <Route exact path="/template/edit/:id" element={<CreateTest />} />
+          <Route exact path="/manage/template" element={<MyTemplate />} />
+          <Route path="/test/conduct/:id" element={<DoTest />} />
+          <Route path="/manage/test" element={<MyTest />} />
           <Route path="/manage/class" element={<ManageClass />} />
-          <Route path="/dashboard" element={<Dashboard />}
-          />
+          <Route path="/dashboard" element={<Dashboard />} />
         </AdminRouting>
       ) : (
         <GlobalRouting>

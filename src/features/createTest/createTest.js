@@ -1,21 +1,18 @@
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import ApiStatusDialog from "../../components/dialog/dialog.js";
+import { handleApi } from "../../components/utils/utils";
+import constant from "../../constants/constant";
+import QuestionAns from "./components/question";
 import "./createTest.css";
 import { fakeData } from "./fakeData";
-import { useParams } from "react-router";
-import React, { useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
-import QuestionAns from "./components/question";
-import Button from "@mui/material/Button";
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import { onChangeFormValue, onChangeTime } from "./libs/functions";
-import { selectType } from "./components/selectTypeConfig";
-import {showToast} from "../../components/toast/toast.js"
-import DateTimePicker from "@mui/lab/DateTimePicker";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import constant from "../../constants/constant";
-import { handleApi } from "../../components/utils/utils";
-import axios from "axios";
 
 function fetchSubject(setSubject) {
   axios
@@ -36,21 +33,39 @@ function fetchSubject(setSubject) {
     });
 }
 
-function createTestAPI(reqBody) {
+function createTestAPI(reqBody, setDialogObj) {
   axios
     .post(`${constant.BASEURL}/core/exam-template`, reqBody)
     .then((res) => {
       handleApi(res, (e) => {
+        setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
         setTimeout(() => {
-          alert("Congrat, create successfully");
-        }, 400);
+          setDialogObj({
+            open: false,
+            msg: res.data.message,
+            status: 1,
+          });
+        }, 2000);
       });
     })
     .catch((error) => {
       console.log(error);
+      setDialogObj({
+        open: true,
+        msg: "System error",
+        status: 2,
+      });
       setTimeout(() => {
-        alert(error);
-      }, 400);
+        setDialogObj({
+          open: false,
+          msg: "System error",
+          status: 2,
+        });
+      }, 2000);
     });
 }
 
@@ -78,9 +93,12 @@ function CreateTest(props) {
   const [subject, setSubject] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [focus, setFocused] = useState(null);
+  const [dialogObj, setDialogObj] = useState({
+    open: false,
+    msg: "OK",
+    status: 1,
+  });
   const { id } = useParams();
-  console.log("YOUR UPDATE ID")
-  console.log(typeof id)
   // const id = 3
   useEffect(() => {
     if (id && id !== "null") {
@@ -225,11 +243,8 @@ function CreateTest(props) {
               console.log(formData);
             } else {
               // handleCreate();
-              <Alert severity="success">
-                <AlertTitle>Success</AlertTitle>
-                This is a success alert — <strong>check it out!</strong>
-              </Alert>;
-              // createTestAPI(formData);
+              console.log(formData);
+              createTestAPI(formData, setDialogObj);
             }
           }}
           variant="contained"
@@ -237,6 +252,11 @@ function CreateTest(props) {
           <div id="toast"></div>
           Save
         </Button>
+        <ApiStatusDialog
+          msg={dialogObj.msg}
+          open={dialogObj.open}
+          status={dialogObj.status}
+        />
       </div>
     </>
   );

@@ -15,8 +15,8 @@ import {
   delAns,
 } from "../libs/functions";
 import AddIcon from "@mui/icons-material/Add";
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { selectType, selectQuesType } from "./selectTypeConfig";
 import Radio from "@mui/material/Radio";
@@ -27,9 +27,9 @@ import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import StarIcon from "@mui/icons-material/Star";
 import Tooltip from "@mui/material/Tooltip";
 import Checkbox from "@mui/material/Checkbox";
-import CircularProgress from '@mui/material/CircularProgress';
-import Autocomplete from '@mui/material/Autocomplete';
-import {topFilms} from "../fakeData";
+import CircularProgress from "@mui/material/CircularProgress";
+import Autocomplete from "@mui/material/Autocomplete";
+import { topFilms } from "../fakeData";
 import constant from "../../../constants/constant";
 import { handleApi } from "../../../components/utils/utils";
 import axios from "axios";
@@ -42,15 +42,21 @@ function sleep(delay = 0) {
 
 function fetchQuestion(setOption, search, level, subject_id) {
   axios
-    .get(`${constant.BASEURL}/core/question`, { params: { subject: subject_id, level: level, search: search } })
+    .get(`${constant.BASEURL}/core/question`, {
+      params: { subject: subject_id, level: level, search: search },
+    })
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
-        let arr_question = []
-        res.data.data.results.map((el, index) => (
-          arr_question.push({label: el.content, id: el.id, answers: el.answers})
-        ))
-        setOption(arr_question)
+        let arr_question = [];
+        res.data.data.results.map((el, index) =>
+          arr_question.push({
+            label: el.content,
+            id: el.id,
+            answers: el.answers,
+          })
+        );
+        setOption(arr_question);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -69,8 +75,11 @@ function QuestionAns({ children, ...props }) {
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
   const { el, index, focus, setFocused, formData, setFormData } = props;
-  const [defaultQuestion, setDefaultQuestion] = useState({label: el.content, id: el.id});
-  const bankData = el.is_bank
+  const [defaultQuestion, setDefaultQuestion] = useState({
+    label: el.content,
+    id: el.id,
+  });
+  const bankData = el.is_bank;
   useEffect(() => {
     let active = true;
 
@@ -93,7 +102,7 @@ function QuestionAns({ children, ...props }) {
 
   useEffect(() => {
     if (!open) {
-      fetchQuestion(setOptions, null, null, null)
+      fetchQuestion(setOptions, null, null, null);
       // setOptions([...topFilms]);
     }
   }, [open]);
@@ -129,13 +138,13 @@ function QuestionAns({ children, ...props }) {
                 setBankData(!bankData);
               }}
             /> : <AccountBalanceWalletIcon */}
-            <AccountBalanceWalletIcon
-              className="create_test-icon"
-              onClick={() => {
-                // setBankData(!bankData);
-                addEl(index + 1, formData, setFormData, true);
-              }}
-            />
+          <AccountBalanceWalletIcon
+            className="create_test-icon"
+            onClick={() => {
+              // setBankData(!bankData);
+              addEl(index + 1, formData, setFormData, true);
+            }}
+          />
           {/* } */}
 
           <DeleteIcon
@@ -148,72 +157,82 @@ function QuestionAns({ children, ...props }) {
         <div className="create_test-group">
           <div className="create_test-group_qa">
             <div className="create_test-area_question">
-              {bankData === false?<TextField
-                rows={2}
-                className="create_test-input"
-                value={el.question}
-                onChange={(e) =>
-                  handleChangeQuestion(
-                    e.target.value,
-                    el.id,
-                    formData,
-                    setFormData,
-                    false
-                  )
-                }
-                key={el.id}
-                label="Input question"
-                variant="filled"
-              />: <Autocomplete
-              id="asynchronous-demo"
-              sx={{ width: 300 }}
-              open={open}
-              value={defaultQuestion}
-              onOpen={() => {
-                setOpen(true);
-              }}
-              onClose={() => {
-                setOpen(false);
-              }}
-              isOptionEqualToValue={(options, value) => options.id === value.id}
-              getOptionLabel={(options) => options.label}
-              // value={(option) => option.id}
-              onChange={(e, value)=>{
-                setDefaultQuestion(value)
-                handleChangeQuestion(
-                  value.id === "" ? null : options?.find((option)=> value.id === option.id),
-                  el.id,
-                  formData,
-                  setFormData,
-                  true
-                );
-                // el.answers = options?.find((option)=> e.target.value === option.label)?.answers
-              }}
-              options={options}
-              renderOption={(props, option) => {
-                return (
-                  <li {...props} key={option.id}>
-                    {option.label}
-                  </li>
-                );
-              }}
-              loading={loading}
-              renderInput={(params) => (
+              {bankData === false ? (
                 <TextField
-                  {...params}
-                  label="Choose question"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <React.Fragment>
-                        {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                        {params.InputProps.endAdornment}
-                      </React.Fragment>
-                    ),
+                  rows={2}
+                  className="create_test-input"
+                  value={el.question}
+                  onChange={(e) =>
+                    handleChangeQuestion(
+                      e.target.value,
+                      el.id,
+                      formData,
+                      setFormData,
+                      false
+                    )
+                  }
+                  key={el.id}
+                  label="Input question"
+                  variant="filled"
+                />
+              ) : (
+                <Autocomplete
+                  id="asynchronous-demo"
+                  sx={{ width: 300 }}
+                  open={open}
+                  value={defaultQuestion}
+                  onOpen={() => {
+                    setOpen(true);
                   }}
+                  onClose={() => {
+                    setOpen(false);
+                  }}
+                  isOptionEqualToValue={(options, value) =>
+                    options.id === value.id
+                  }
+                  getOptionLabel={(options) => options.label}
+                  // value={(option) => option.id}
+                  onChange={(e, value) => {
+                    setDefaultQuestion(value);
+                    handleChangeQuestion(
+                      value.id === ""
+                        ? null
+                        : options?.find((option) => value.id === option.id),
+                      el.id,
+                      formData,
+                      setFormData,
+                      true
+                    );
+                    // el.answers = options?.find((option)=> e.target.value === option.label)?.answers
+                  }}
+                  options={options}
+                  renderOption={(props, option) => {
+                    return (
+                      <li {...props} key={option.id}>
+                        {option.label}
+                      </li>
+                    );
+                  }}
+                  loading={loading}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Choose question"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <React.Fragment>
+                            {loading ? (
+                              <CircularProgress color="inherit" size={20} />
+                            ) : null}
+                            {params.InputProps.endAdornment}
+                          </React.Fragment>
+                        ),
+                      }}
+                    />
+                  )}
                 />
               )}
-            />}
             </div>
             <div className="create_test-area_type">
               <TextField
@@ -245,7 +264,7 @@ function QuestionAns({ children, ...props }) {
                 id="outlined-select-currency-native"
                 select
                 label="Choose difficulty"
-                value={el.question_type}
+                value={el.level}
                 onChange={(e) => {
                   handleChangeDifficult(
                     e.target.value,
@@ -291,67 +310,82 @@ function Answers({ ...props }) {
     <>
       <FormLabel id="demo-controlled-radio-buttons-group">Answers</FormLabel>
       {el.answers?.map((an) => {
-          return (
-              <div key={an.id} className="create_test-ans">
-                <div className="create_test-ans_input">
-                  {el.type === "radio" ? (
-                    <Radio
-                      style={{ paddingLeft: 0, paddingBottom: 0 }}
-                      disabled={true}
-                    />
-                  ) : (
-                    <Checkbox
-                      style={{ paddingLeft: 0, paddingBottom: 0 }}
-                      disabled
-                    />
-                  )}
-                  <TextField
-                    placeholder="Nhập câu trả lời"
-                    value={an.content}
-                    disabled={el.isBank}
-                    onChange={(e) => {
-                      handleChangeAns(
-                        e.target.value,
-                        el.id,
-                        an.id,
-                        formData,
-                        setFormData
-                      );
-                    }}
-                    style={{ margin: "auto 0" }}
-                    id="standard-basic"
-                    variant="standard"
-                  />
-                </div>
-                {!an.is_correct ? (
-                  <Tooltip title="Đánh dấu câu trả lời đúng" arrow>
-                    <StarOutlineIcon
-                      onClick={() =>
-                        addCorrectAns(an.id, el.id, formData, setFormData, el.is_bank)
-                      }
-                      style={{
-                        marginTop: "auto",
-                        marginRight: "20px",
-                        color: "#262626",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Tooltip>
-                ) : (
-                  <Tooltip title="Xóa đánh dấu" arrow>
-                    <StarIcon
-                      onClick={() =>
-                        delCorrectAns(el.id, an.id, formData, setFormData, el.is_bank)
-                      }
-                      style={{
-                        marginTop: "auto",
-                        marginRight: "20px",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Tooltip>
-                )}
-                {el.is_bank ? (<></>) : (<>
+        return (
+          <div key={an.id} className="create_test-ans">
+            <div className="create_test-ans_input">
+              {el.type === "radio" ? (
+                <Radio
+                  style={{ paddingLeft: 0, paddingBottom: 0 }}
+                  disabled={true}
+                />
+              ) : (
+                <Checkbox
+                  style={{ paddingLeft: 0, paddingBottom: 0 }}
+                  disabled
+                />
+              )}
+              <TextField
+                placeholder="Nhập câu trả lời"
+                value={an.content}
+                disabled={el.isBank}
+                onChange={(e) => {
+                  handleChangeAns(
+                    e.target.value,
+                    el.id,
+                    an.id,
+                    formData,
+                    setFormData
+                  );
+                }}
+                style={{ margin: "auto 0" }}
+                id="standard-basic"
+                variant="standard"
+              />
+            </div>
+            {!an.is_correct ? (
+              <Tooltip title="Đánh dấu câu trả lời đúng" arrow>
+                <StarOutlineIcon
+                  onClick={() =>
+                    addCorrectAns(
+                      an.id,
+                      el.id,
+                      formData,
+                      setFormData,
+                      el.is_bank
+                    )
+                  }
+                  style={{
+                    marginTop: "auto",
+                    marginRight: "20px",
+                    color: "#262626",
+                    cursor: "pointer",
+                  }}
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip title="Xóa đánh dấu" arrow>
+                <StarIcon
+                  onClick={() =>
+                    delCorrectAns(
+                      el.id,
+                      an.id,
+                      formData,
+                      setFormData,
+                      el.is_bank
+                    )
+                  }
+                  style={{
+                    marginTop: "auto",
+                    marginRight: "20px",
+                    cursor: "pointer",
+                  }}
+                />
+              </Tooltip>
+            )}
+            {el.is_bank ? (
+              <></>
+            ) : (
+              <>
                 <Tooltip title="Xóa câu trả lời" arrow>
                   <ClearIcon
                     onClick={() => {
@@ -363,10 +397,12 @@ function Answers({ ...props }) {
                       cursor: "pointer",
                     }}
                   />
-                </Tooltip></>)}
-              </div>
-          );
-        })}
+                </Tooltip>
+              </>
+            )}
+          </div>
+        );
+      })}
       {!el.is_bank && (
         <Button
           onClick={() => {
