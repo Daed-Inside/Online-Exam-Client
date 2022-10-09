@@ -19,8 +19,9 @@
   top: 50%;
   margin: auto;
   width: 80%;
-  height: 60%;
+  height: 80%;
   display: flex;
+  border-radius: 5px;
 }
 .table-data-section {
   flex: 9;
@@ -57,11 +58,6 @@
   justify-content: right;
 }
 
-.table-section {
-  height: 75%;
-  border-radius: 5px;
-}
-
 .word-break-cell {
   whitespace: "normal";
   wordbreak: "break-word";
@@ -71,4 +67,17 @@
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+}
+
+.blacked-text {
+  display: inline-block;
+  color: #262626;
+  font-size: 15px;
+}
+
+.total-element-footer {
+  flex: 1;
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
 }

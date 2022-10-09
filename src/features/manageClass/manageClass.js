@@ -24,7 +24,7 @@ import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
 import Pagination from "@mui/material/Pagination";
 
 // * fetch class info api
-function fetchData(setTableData, pagingObj, setPagingObj) {
+function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
   axios
     .get(`${constant.BASEURL}/core/class`, { params: pagingObj })
     .then((res) => {
@@ -36,6 +36,8 @@ function fetchData(setTableData, pagingObj, setPagingObj) {
           totalPages: res.data.data.totalPages,
           totalElements: res.data.data.totalElements,
         });
+        const emptyRows = pagingObj.limit - res.data.data.results.length;
+        setEmptyRow(emptyRows);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -53,9 +55,8 @@ function fetchData(setTableData, pagingObj, setPagingObj) {
 export default function ManageClass() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("id");
-  const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [emptyRow, setEmptyRow] = useState(0);
   const [open, setOpen] = React.useState(false);
   const [tableData, setTableData] = useState([]);
   const [pagingObj, setPagingObj] = useState({
@@ -69,11 +70,11 @@ export default function ManageClass() {
   });
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj);
+    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
   }, []);
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj);
+    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
   }, [pagingObj.search, pagingObj.page, pagingObj.limit]);
 
   function handleSearch(search_str) {
@@ -81,11 +82,6 @@ export default function ManageClass() {
     newPagingObj.search = search_str;
     setPagingObj(newPagingObj);
   }
-
-  const emptyRows =
-    page > 0
-      ? Math.max(0, (1 + page) * rowsPerPage - SampleManageClass.length)
-      : 0;
 
   function handleEdit() {}
 
@@ -127,9 +123,9 @@ export default function ManageClass() {
             sx={{ width: "100%", mb: 2, height: "100%" }}
           >
             <div className="table-data-section">
-              <TableContainer>
+              <TableContainer sx={{ height: "100%" }}>
                 <Table
-                  sx={{ minWidth: 750 }}
+                  sx={{ minWidth: 750, height: "100%" }}
                   aria-labelledby="tableTitle"
                   size={dense ? "small" : "medium"}
                 >
@@ -145,10 +141,10 @@ export default function ManageClass() {
                     {tableData.map((row, index) => {
                       return <BodyItem row={row} />;
                     })}
-                    {emptyRows > 0 && (
+                    {emptyRow > 0 && (
                       <TableRow
                         style={{
-                          height: (dense ? 33 : 53) * emptyRows,
+                          height: (dense ? 33 : 53) * emptyRow,
                         }}
                       >
                         <TableCell colSpan={6} />
@@ -166,14 +162,7 @@ export default function ManageClass() {
               page={page}
             /> */}
             <div className="table-footer-section">
-              <div
-                style={{
-                  flex: 1,
-                  float: "left",
-                  marginTop: "10px",
-                  marginLeft: "10px",
-                }}
-              >
+              <div className="total-element-footer blacked-text">
                 Total items: {pagingObj.totalElements}
               </div>
               <div

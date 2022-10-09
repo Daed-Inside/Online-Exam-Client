@@ -40,7 +40,7 @@ function sleep(delay = 0) {
   });
 }
 
-function fetchQuestion(setOption, search, level, subject_id) {
+function fetchQuestion(setOption, search, level, subject_id, setLoading) {
   axios
     .get(`${constant.BASEURL}/core/question`, {
       params: { subject: subject_id, level: level, search: search },
@@ -57,6 +57,7 @@ function fetchQuestion(setOption, search, level, subject_id) {
           })
         );
         setOption(arr_question);
+        setLoading(false);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -73,39 +74,32 @@ function QuestionAns({ children, ...props }) {
   // const [bankData, setBankData] = useState(false);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
-  const loading = open && options.length === 0;
+  // const loading = open && options.length === 0;
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState(null);
   const { el, index, focus, setFocused, formData, setFormData } = props;
   const [defaultQuestion, setDefaultQuestion] = useState({
     label: el.content,
     id: el.id,
   });
   const bankData = el.is_bank;
-  useEffect(() => {
-    let active = true;
 
-    if (!loading) {
-      return undefined;
-    }
-
-    (async () => {
-      await sleep(1e3); // For demo purposes.
-
-      if (active) {
-        setOptions([]);
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
-
-  useEffect(() => {
-    if (!open) {
-      fetchQuestion(setOptions, null, null, null);
+  useEffect(async () => {
+    if (open) {
+      await setLoading(true);
+      fetchQuestion(setOptions, null, el.level, formData.subject, setLoading);
       // setOptions([...topFilms]);
     }
   }, [open]);
+
+  useEffect(async () => {
+    await setLoading(true);
+    const delayDebounceFn = setTimeout(() => {
+      fetchQuestion(setOptions, search, el.level, formData.subject, setLoading);
+      // Send Axios request here
+    }, 1000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
 
   return (
     <>
@@ -131,13 +125,6 @@ function QuestionAns({ children, ...props }) {
               addEl(index + 1, formData, setFormData, false);
             }}
           />
-          {/* {
-            bankData === false ? <AccountBalanceWalletOutlinedIcon
-              className="create_test-icon"
-              onClick={() => {
-                setBankData(!bankData);
-              }}
-            /> : <AccountBalanceWalletIcon */}
           <AccountBalanceWalletIcon
             className="create_test-icon"
             onClick={() => {
@@ -145,8 +132,6 @@ function QuestionAns({ children, ...props }) {
               addEl(index + 1, formData, setFormData, true);
             }}
           />
-          {/* } */}
-
           <DeleteIcon
             className="create_test-icon"
             onClick={() => {
@@ -190,8 +175,9 @@ function QuestionAns({ children, ...props }) {
                   isOptionEqualToValue={(options, value) =>
                     options.id === value.id
                   }
+                  onInputChange={(e, value) => setSearch(value)}
+                  filterOptions={(options, state) => options}
                   getOptionLabel={(options) => options.label}
-                  // value={(option) => option.id}
                   onChange={(e, value) => {
                     setDefaultQuestion(value);
                     handleChangeQuestion(
@@ -203,7 +189,6 @@ function QuestionAns({ children, ...props }) {
                       setFormData,
                       true
                     );
-                    // el.answers = options?.find((option)=> e.target.value === option.label)?.answers
                   }}
                   options={options}
                   renderOption={(props, option) => {

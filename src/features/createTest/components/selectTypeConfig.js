@@ -15,15 +15,15 @@ export const selectType = [
 
 export const selectQuesType = [
   {
-    value: 0,
+    value: 1,
     label: "Easy",
   },
   {
-    value: 1,
+    value: 2,
     label: "Medium",
   },
   {
-    value: 2,
+    value: 3,
     label: "Hard",
   },
 ];

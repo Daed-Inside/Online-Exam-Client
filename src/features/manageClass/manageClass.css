@@ -19,14 +19,15 @@
   top: 50%;
   margin: auto;
   width: 80%;
-  height: 60%;
+  height: 80%;
   display: flex;
+  border-radius: 5px;
 }
 .table-data-section {
-  flex: 9
+  flex: 9;
 }
 .table-footer-section {
-  flex: 1
+  flex: 1;
 }
 .table-name {
   display: inline-block;
@@ -58,11 +59,6 @@
   gap: 8px;
 }
 
-.table-section {
-  height: 75%;
-  border-radius: 5px;
-}
-
 .word-break-cell {
   whitespace: "normal";
   wordbreak: "break-word";
@@ -82,4 +78,17 @@
 
 .manage_class-select_item:hover {
   background-color: #77e2c7;
+}
+
+.blacked-text {
+  display: inline-block;
+  color: #262626;
+  font-size: 15px;
+}
+
+.total-element-footer {
+  flex: 1;
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
 }

@@ -1,30 +1,29 @@
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import InputAdornment from "@mui/material/InputAdornment";
+import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { EnhancedTableHead } from "../../components/table/Header";
 import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
 import { myTemplateHeader, SampleMyTest } from "../../constants/sample";
-import { useNavigate } from "react-router-dom";
-import Pagination from "@mui/material/Pagination";
-import "./mytemplate.css";
 import AddTemplateClassDiaglog from "./component/manageTemplClass";
+import "./mytemplate.css";
 
-function fetchData(setTableData, pagingObj, setPagingObj) {
+function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
   axios
     .get(`${constant.BASEURL}/core/exam-template`, { params: pagingObj })
     .then((res) => {
@@ -36,6 +35,8 @@ function fetchData(setTableData, pagingObj, setPagingObj) {
           totalPages: res.data.data.totalPages,
           totalElements: res.data.data.totalElements,
         });
+        const emptyRows = pagingObj.limit - res.data.data.results.length;
+        setEmptyRow(emptyRows);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -53,9 +54,8 @@ export default function MyTemplate() {
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
-  const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [emptyRow, setEmptyRow] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [pagingObj, setPagingObj] = useState({
@@ -69,15 +69,12 @@ export default function MyTemplate() {
   });
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj);
+    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
   }, []);
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj);
+    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
   }, [pagingObj.search, pagingObj.page, pagingObj.search]);
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - SampleMyTest.length) : 0;
 
   function handleSearch(searchStr) {
     let newPaging = { ...pagingObj };
@@ -92,7 +89,7 @@ export default function MyTemplate() {
           <div className="table-name">
             <div className="align-name-center">
               <Typography variant="h4" noWrap component="div">
-                My Test
+                My examination template
               </Typography>
             </div>
           </div>
@@ -157,11 +154,7 @@ export default function MyTemplate() {
                           <TableCell align="center">
                             <EditIcon
                               onClick={(e) =>
-                                navigate(
-                                  `/template/edit/${e.target.parentElement.parentElement.getAttribute(
-                                    "id"
-                                  )}`
-                                )
+                                navigate(`/template/edit/${row.id}`)
                               }
                               className="icon"
                             />
@@ -177,10 +170,10 @@ export default function MyTemplate() {
                         </TableRow>
                       );
                     })}
-                    {emptyRows > 0 && (
+                    {emptyRow > 0 && (
                       <TableRow
                         style={{
-                          height: (dense ? 33 : 53) * emptyRows,
+                          height: (dense ? 33 : 53) * emptyRow,
                         }}
                       >
                         <TableCell colSpan={6} />
@@ -198,14 +191,7 @@ export default function MyTemplate() {
               page={pagingObj.page}
             /> */}
             <div className="table-footer-section">
-              <div
-                style={{
-                  flex: 1,
-                  float: "left",
-                  marginTop: "10px",
-                  marginLeft: "10px",
-                }}
-              >
+              <div className="total-element-footer blacked-text">
                 Total items: {pagingObj.totalElements}
               </div>
               <div

@@ -1,8 +1,14 @@
 import SearchIcon from "@mui/icons-material/Search";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
+import Tab from "@mui/material/Tab";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,13 +18,18 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { EnhancedTableHead } from "../../components/table/Header";
 import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
-import { SampleHeader, SampleMyTest } from "../../constants/sample";
+import {
+  IncomingTabHeader,
+  SampleHeader,
+  SampleMyTest,
+} from "../../constants/sample";
 import "./mytest.css";
 
-function fetchData(setTableData, pagingObj, setPagingObj) {
+function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
   axios
     .get(`${constant.BASEURL}/core/exam-result`, { params: pagingObj })
     .then((res) => {
@@ -30,6 +41,8 @@ function fetchData(setTableData, pagingObj, setPagingObj) {
           totalPages: res.data.data.totalPages,
           totalElements: res.data.data.totalElements,
         });
+        const emptyRows = pagingObj.limit - res.data.data.results.length;
+        setEmptyRow(emptyRows);
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -44,11 +57,12 @@ function fetchData(setTableData, pagingObj, setPagingObj) {
 }
 
 export default function MyTest() {
+  const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
-  const [page, setPage] = useState(0);
+  const [tabValue, setTabValue] = useState("COMPLETED");
   const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [emptyRow, setEmptyRow] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [pagingObj, setPagingObj] = useState({
     page: 1,
@@ -61,21 +75,22 @@ export default function MyTest() {
   });
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj);
+    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
   }, []);
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj);
-  }, [pagingObj.search, pagingObj.page, pagingObj.search]);
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - SampleMyTest.length) : 0;
+    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
+  }, [pagingObj.search, pagingObj.page]);
 
   function handleSearch(searchStr) {
     let newPaging = { ...pagingObj };
     newPaging.search = searchStr;
     setPagingObj(newPaging);
   }
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   return (
     <>
@@ -107,91 +122,201 @@ export default function MyTest() {
           </div>
         </div>
         <div className="table-section">
-          <Paper
-            className="table-paper"
-            sx={{ width: "100%", mb: 2, height: "100%" }}
-          >
-            <div className="table-data-section">
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? "small" : "medium"}
-                >
-                  <EnhancedTableHead
-                    header={SampleHeader}
-                    order={order}
-                    orderBy={orderBy}
-                    rowCount={SampleMyTest.length}
-                  />
-                  <TableBody>
-                    {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+          <TabContext value={tabValue}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <TabList
+                onChange={handleTabChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="COMPLETED" value="COMPLETED" />
+                <Tab label="INCOMING" value="INCOMING" />
+              </TabList>
+            </Box>
+            <TabPanel sx={{ padding: "5px 0 0 0" }} value="COMPLETED">
+              <Paper
+                className="table-paper"
+                sx={{ width: "100%", mb: 2, height: "110%" }}
+              >
+                <div className="table-data-section">
+                  <TableContainer sx={{ height: "100%" }}>
+                    <Table
+                      sx={{ minWidth: 750, height: "100%" }}
+                      aria-labelledby="tableTitle"
+                      size={dense ? "small" : "medium"}
+                    >
+                      <EnhancedTableHead
+                        header={SampleHeader}
+                        order={order}
+                        orderBy={orderBy}
+                        rowCount={SampleMyTest.length}
+                      />
+                      <TableBody>
+                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                    {tableData.map((row, index) => {
-                      return (
-                        <TableRow hover key={row.id}>
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            padding="normal"
-                            align="center"
+                        {tableData.map((row, index) => {
+                          return (
+                            <TableRow hover key={row.id}>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                padding="normal"
+                                align="center"
+                              >
+                                {row.id}
+                              </TableCell>
+                              <TableCell
+                                align="left"
+                                className="word-break-cell"
+                              >
+                                {row.name}
+                              </TableCell>
+                              <TableCell align="left">{row.subject}</TableCell>
+                              <TableCell
+                                align="left"
+                                className="word-break-cell"
+                              >
+                                {row.first_name} {row.last_name}
+                              </TableCell>
+                              <TableCell align="left">{row.date}</TableCell>
+                              <TableCell align="center">{row.score}</TableCell>
+                            </TableRow>
+                          );
+                        })}
+                        {emptyRow > 0 && (
+                          <TableRow
+                            style={{
+                              height: (dense ? 33 : 53) * emptyRow,
+                            }}
                           >
-                            {row.id}
-                          </TableCell>
-                          <TableCell align="left" className="word-break-cell">
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="left">{row.subject}</TableCell>
-                          <TableCell align="left" className="word-break-cell">
-                            {row.first_name} {row.last_name}
-                          </TableCell>
-                          <TableCell align="left">{row.date}</TableCell>
-                          <TableCell align="center">{row.score}</TableCell>
-                        </TableRow>
-                      );
-                    })}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: (dense ? 33 : 53) * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-            <div className="table-footer-section">
-              <div
-                style={{
-                  flex: 1,
-                  float: "left",
-                  marginTop: "10px",
-                  marginLeft: "10px",
-                }}
+                            <TableCell colSpan={6} />
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+                <div className="table-footer-section">
+                  <div className="total-element-footer blacked-text">
+                    Total items: {pagingObj.totalElements}
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      float: "right",
+                      marginTop: "10px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    <Pagination
+                      count={pagingObj.totalPages}
+                      page={pagingObj.page}
+                      onChange={(e, value) =>
+                        setPagingObj({ ...pagingObj, page: value })
+                      }
+                    />
+                  </div>
+                </div>
+              </Paper>
+            </TabPanel>
+            <TabPanel sx={{ padding: "5px 0 0 0" }} value="INCOMING">
+              <Paper
+                className="table-paper"
+                sx={{ width: "100%", mb: 2, height: "110%" }}
               >
-                Total items: {pagingObj.totalElements}
-              </div>
-              <div
-                style={{
-                  flex: 1,
-                  float: "right",
-                  marginTop: "10px",
-                  marginRight: "10px",
-                }}
-              >
-                <Pagination
-                  count={pagingObj.totalPages}
-                  page={pagingObj.page}
-                  onChange={(e, value) =>
-                    setPagingObj({ ...pagingObj, page: value })
-                  }
-                />
-              </div>
-            </div>
-          </Paper>
+                <div className="table-data-section">
+                  <TableContainer sx={{ height: "100%" }}>
+                    <Table
+                      sx={{ minWidth: 750, height: "100%" }}
+                      aria-labelledby="tableTitle"
+                      size={dense ? "small" : "medium"}
+                    >
+                      <EnhancedTableHead
+                        header={IncomingTabHeader}
+                        order={order}
+                        orderBy={orderBy}
+                        rowCount={SampleMyTest.length}
+                      />
+                      <TableBody>
+                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                 rows.slice().sort(getComparator(order, orderBy)) */}
+                        {tableData.map((row, index) => {
+                          return (
+                            <TableRow hover id={row.id} key={row.id}>
+                              <TableCell
+                                component="th"
+                                scope="row"
+                                padding="normal"
+                                align="center"
+                              >
+                                {row.id}
+                              </TableCell>
+                              <TableCell
+                                align="left"
+                                className="word-break-cell"
+                              >
+                                {row.name}
+                              </TableCell>
+                              <TableCell align="left">{row.subject}</TableCell>
+                              <TableCell
+                                align="left"
+                                className="word-break-cell"
+                              >
+                                {row.first_name} {row.last_name}
+                              </TableCell>
+                              <TableCell align="left">{row.date}</TableCell>
+                              <TableCell align="center">
+                                <Button
+                                  sx={{
+                                    padding: "0 0 0 0",
+                                    fontSize: "12px",
+                                  }}
+                                  onClick={(e) =>
+                                    navigate(`/test/conduct/${row.id}`)
+                                  }
+                                >
+                                  Take exam
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                        {emptyRow > 0 && (
+                          <TableRow
+                            style={{
+                              height: (dense ? 33 : 53) * emptyRow,
+                            }}
+                          >
+                            <TableCell colSpan={6} />
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </div>
+                <div className="table-footer-section">
+                  <div className="total-element-footer blacked-text">
+                    Total items: {pagingObj.totalElements}
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      float: "right",
+                      marginTop: "10px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    <Pagination
+                      count={pagingObj.totalPages}
+                      page={pagingObj.page}
+                      onChange={(e, value) =>
+                        setPagingObj({ ...pagingObj, page: value })
+                      }
+                    />
+                  </div>
+                </div>
+              </Paper>
+            </TabPanel>
+          </TabContext>
         </div>
       </div>
     </>

@@ -1,23 +1,21 @@
-import * as React from "react";
+import AddIcon from "@mui/icons-material/Add";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import CloseIcon from "@mui/icons-material/Close";
+import SearchIcon from "@mui/icons-material/Search";
+import { IconButton, InputAdornment } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { FormControl, InputAdornment, IconButton } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
-import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
+import { Form, Formik } from "formik";
+import * as React from "react";
+import * as Yup from "yup";
 import { FormikError } from "../../../components/FormikError/FormikError";
 import { handleApi } from "../../../components/utils/utils";
 import constant from "../../../constants/constant";
-import axios from "axios";
-import * as Yup from "yup";
 
 export const CreateClassSchema = Yup.object().shape({
   name: Yup.string().required("Required"),

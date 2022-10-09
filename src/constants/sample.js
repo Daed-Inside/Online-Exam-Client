@@ -6,7 +6,7 @@ export const SampleHeader = [
     isSort: true,
     disablePadding: false,
     label: "id",
-    width: '10%'
+    width: "10%",
   },
   {
     id: "name",
@@ -15,7 +15,7 @@ export const SampleHeader = [
     isSort: true,
     disablePadding: false,
     label: "Name",
-    width: '30%'
+    width: "30%",
   },
   {
     id: "subject",
@@ -24,7 +24,7 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Subject",
-    width: '15%'
+    width: "15%",
   },
   {
     id: "lecturer",
@@ -33,7 +33,7 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Lecturer",
-    width: '20%'
+    width: "20%",
   },
   {
     id: "date",
@@ -42,7 +42,7 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Date",
-    width: '15%'
+    width: "15%",
   },
   {
     id: "score",
@@ -51,7 +51,64 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Score",
-    width: '10%'
+    width: "10%",
+  },
+];
+
+export const IncomingTabHeader = [
+  {
+    id: "id",
+    middle: true,
+    numeric: false,
+    isSort: true,
+    disablePadding: false,
+    label: "id",
+    width: "10%",
+  },
+  {
+    id: "name",
+    middle: false,
+    numeric: false,
+    isSort: true,
+    disablePadding: false,
+    label: "Name",
+    width: "30%",
+  },
+  {
+    id: "subject",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Subject",
+    width: "15%",
+  },
+  {
+    id: "lecturer",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Lecturer",
+    width: "20%",
+  },
+  {
+    id: "date",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Date",
+    width: "15%",
+  },
+  {
+    id: "Take exam",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Take exam",
+    width: "10%",
   },
 ];
 
@@ -63,7 +120,7 @@ export const myTemplateHeader = [
     isSort: true,
     disablePadding: false,
     label: "id",
-    width: '10%'
+    width: "10%",
   },
   {
     id: "name",
@@ -72,7 +129,7 @@ export const myTemplateHeader = [
     isSort: true,
     disablePadding: false,
     label: "Name",
-    width: '20%'
+    width: "20%",
   },
   {
     id: "subject",
@@ -81,7 +138,7 @@ export const myTemplateHeader = [
     isSort: false,
     disablePadding: false,
     label: "Subject",
-    width: '15%'
+    width: "15%",
   },
   {
     id: "start_date",
@@ -90,7 +147,7 @@ export const myTemplateHeader = [
     isSort: false,
     disablePadding: false,
     label: "Start date",
-    width: '15%'
+    width: "15%",
   },
   {
     id: "created_date",
@@ -99,7 +156,7 @@ export const myTemplateHeader = [
     isSort: false,
     disablePadding: false,
     label: "Score",
-    width: '20%'
+    width: "20%",
   },
   {
     id: "action",
@@ -108,17 +165,23 @@ export const myTemplateHeader = [
     isSort: false,
     disablePadding: false,
     label: "Score",
-    width: '20%'
-  }
-]
+    width: "20%",
+  },
+];
 
 export const SampleMyTest = [
-    {id: "1", name: "Physical Test first semester class 3A", subject: "Physical", date: "New Dawn", score: 20 },
-    {id: "2", name: "test 1", subject: "Physical", date: "New Dawn", score: 19 },
-    {id: "3", name: "test 1", subject: "Physical", date: "New Dawn", score: 12 },
-    {id: "4", name: "test 1", subject: "Physical", date: "New Dawn", score: 13 },
-    {id: "5", name: "test 1", subject: "Physical", date: "New Dawn", score: 13 },
-    {id: "6", name: "test 1", subject: "Physical", date: "New Dawn", score: 45 },
-    {id: "7", name: "test 1", subject: "Physical", date: "New Dawn", score: 34 },
-    {id: "8", name: "test 1", subject: "Physical", date: "New Dawn", score: 56 }
-]
+  {
+    id: "1",
+    name: "Physical Test first semester class 3A",
+    subject: "Physical",
+    date: "New Dawn",
+    score: 20,
+  },
+  { id: "2", name: "test 1", subject: "Physical", date: "New Dawn", score: 19 },
+  { id: "3", name: "test 1", subject: "Physical", date: "New Dawn", score: 12 },
+  { id: "4", name: "test 1", subject: "Physical", date: "New Dawn", score: 13 },
+  { id: "5", name: "test 1", subject: "Physical", date: "New Dawn", score: 13 },
+  { id: "6", name: "test 1", subject: "Physical", date: "New Dawn", score: 45 },
+  { id: "7", name: "test 1", subject: "Physical", date: "New Dawn", score: 34 },
+  { id: "8", name: "test 1", subject: "Physical", date: "New Dawn", score: 56 },
+];
