@@ -141,6 +141,15 @@ export const myTemplateHeader = [
     width: "15%",
   },
   {
+    id: "duration",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Duration",
+    width: "10%",
+  },
+  {
     id: "start_date",
     middle: false,
     numeric: false,
@@ -151,12 +160,12 @@ export const myTemplateHeader = [
   },
   {
     id: "created_date",
-    middle: true,
+    middle: false,
     numeric: false,
     isSort: false,
     disablePadding: false,
-    label: "Score",
-    width: "20%",
+    label: "Created date",
+    width: "15%",
   },
   {
     id: "action",
@@ -164,8 +173,8 @@ export const myTemplateHeader = [
     numeric: false,
     isSort: false,
     disablePadding: false,
-    label: "Score",
-    width: "20%",
+    label: "Action",
+    width: "15%",
   },
 ];
 

@@ -84,16 +84,16 @@ function QuestionAns({ children, ...props }) {
   });
   const bankData = el.is_bank;
 
-  useEffect(async () => {
+  useEffect(() => {
     if (open) {
-      await setLoading(true);
+      setLoading(true);
       fetchQuestion(setOptions, null, el.level, formData.subject, setLoading);
       // setOptions([...topFilms]);
     }
   }, [open]);
 
-  useEffect(async () => {
-    await setLoading(true);
+  useEffect(() => {
+    setLoading(true);
     const delayDebounceFn = setTimeout(() => {
       fetchQuestion(setOptions, search, el.level, formData.subject, setLoading);
       // Send Axios request here

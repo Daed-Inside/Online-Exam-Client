@@ -18,20 +18,35 @@ import SearchIcon from "@mui/icons-material/Search";
 import Link from "@mui/material/Link";
 import BookIcon from "../../../assets/images/book.png";
 import { useNavigate } from "react-router-dom";
+import constant from "../../../constants/constant";
+import jwt_decode from "jwt-decode";
 
 const pages = [
   { label: "Create Test", url: "/template/create" },
-  { label: "Do Test", url: "/test/conduct" },
   { label: "My Test", url: "/manage/test" },
   { label: "Manage Class", url: "/manage/class" },
   { label: "Manage Template", url: "/manage/template" },
 ];
+
+const studentPages = [{ label: "My Test", url: "/manage/test" }];
+
+const fakePages = [];
+
 const settings = ["Profile", "Dashboard"];
 
 const NavBar = () => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [permission, setPermission] = React.useState(-1);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem(constant.localStorage.TOKEN);
+    if (token != null && token.length > 0) {
+      const decoded = jwt_decode(token);
+      setPermission(parseInt(decoded.role));
+    }
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -97,21 +112,57 @@ const NavBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page.url}>
-                  <Link href={page.url}>{page.label}</Link>
-                </MenuItem>
-              ))}
+              {permission === -1 ||
+              permission == null ||
+              permission == undefined
+                ? fakePages.map((page) => (
+                    <MenuItem key={page.url}>
+                      <Link href={page.url}>{page.label}</Link>
+                    </MenuItem>
+                  ))
+                : permission === 2
+                ? pages.map((page) => (
+                    <MenuItem key={page.url}>
+                      <Link href={page.url}>{page.label}</Link>
+                    </MenuItem>
+                  ))
+                : studentPages.map((page) => (
+                    <MenuItem key={page.url}>
+                      <Link href={page.url}>{page.label}</Link>
+                    </MenuItem>
+                  ))}
             </Menu>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <MenuItem className="menu_item" key={page.url} onClick={() => {}}>
-                <a className="menu_item" textAlign="center" href={page.url}>
-                  {page.label}
-                </a>
-              </MenuItem>
-            ))}
+            {permission === -1 ||
+            permission == null ||
+            permission == undefined ? (
+              <></>
+            ) : permission === 2 ? (
+              pages.map((page) => (
+                <MenuItem
+                  className="menu_item"
+                  key={page.url}
+                  onClick={() => {}}
+                >
+                  <a className="menu_item" textAlign="center" href={page.url}>
+                    {page.label}
+                  </a>
+                </MenuItem>
+              ))
+            ) : (
+              studentPages.map((page) => (
+                <MenuItem
+                  className="menu_item"
+                  key={page.url}
+                  onClick={() => {}}
+                >
+                  <a className="menu_item" textAlign="center" href={page.url}>
+                    {page.label}
+                  </a>
+                </MenuItem>
+              ))
+            )}
           </Box>
           {/* <Search>
             <SearchIconWrapper>

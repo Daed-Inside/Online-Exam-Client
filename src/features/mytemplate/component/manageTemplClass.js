@@ -16,22 +16,19 @@ import * as Yup from "yup";
 import { FormikError } from "../../../components/FormikError/FormikError";
 import { handleApi } from "../../../components/utils/utils";
 import constant from "../../../constants/constant";
+import ApiStatusDialog from "../../../components/dialog/dialog.js";
 
-export const CreateClassSchema = Yup.object().shape({
-  name: Yup.string().required("Required"),
-});
-
-function fetchClass(setClassData) {
+function fetchClass(setClassData, setAddedClassData, template_id, search) {
   axios
-    .get(`${constant.BASEURL}/core/class/all`)
+    .get(`${constant.BASEURL}/core/class/all`, {
+      params: { template_id: template_id, search: search },
+    })
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
-        setClassData(res.data.data);
+        setClassData(res.data.data.non_added_class);
+        setAddedClassData(res.data.data.added_class);
       });
-      // setTimeout(() => {
-      //   alert("Login success");
-      // }, 400);
     })
     .catch((error) => {
       console.log(error);
@@ -41,40 +38,68 @@ function fetchClass(setClassData) {
     });
 }
 
-// function createClass(values) {
-//   axios
-//   .post(`${constant.BASEURL}/core/class`, {students:values.selectClass, name:values.name})
-//   .then((res) => {
-//     handleApi(res, (e) => {
-//       //localStorage.setItem(constant.localStorage.EMAIL, e.email);
-//       setTimeout(() => {
-//         alert("Tạo lớp thành công");
-//       }, 400);
-//     });
-//     // setTimeout(() => {
-//     //   alert("Login success");
-//     // }, 400);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//     setTimeout(() => {
-//       alert(error);
-//     }, 400);
-//   });
-// }
+function addClassTemplate(reqBody, setDialogObj, setOpen, setSearch) {
+  axios
+    .post(`${constant.BASEURL}/core/exam-template-class`, reqBody)
+    .then((res) => {
+      handleApi(res, async (e) => {
+        await setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
+        setTimeout(() => {
+          setDialogObj({
+            open: false,
+            msg: res.data.message,
+            status: 1,
+          });
+          setOpen(false);
+          setSearch(null);
+        }, 2000);
+      });
+    })
+    .catch(async (error) => {
+      await setDialogObj({
+        open: true,
+        msg: "System error",
+        status: -1,
+      });
+      setTimeout(() => {
+        setDialogObj({
+          open: false,
+          msg: "System error",
+          status: -1,
+        });
+        setOpen(false);
+      }, 2000);
+    });
+}
 
 function AddTemplateClassDialog(props) {
-  const { el, open, setOpen } = props;
+  const { template_id, open, setOpen } = props;
   const [classData, setClassData] = React.useState([]);
+  const [addedClassData, setAddedClassData] = React.useState([]);
+  const [search, setSearch] = React.useState(null);
+  const [dialogObj, setDialogObj] = React.useState({
+    open: false,
+    msg: "OK",
+    status: 1,
+  });
   React.useEffect(() => {
-    fetchClass(setClassData);
-  }, []);
-
-  function firstLoad() {
-    if (el) {
-    } else {
+    if (template_id != null && template_id != undefined) {
+      fetchClass(setClassData, setAddedClassData, template_id, search);
     }
-  }
+  }, [template_id]);
+
+  React.useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchClass(setClassData, setAddedClassData, template_id, search);
+      // Send Axios request here
+    }, 2000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
+
   return (
     <>
       <Dialog
@@ -86,13 +111,19 @@ function AddTemplateClassDialog(props) {
         <Formik
           initialValues={{
             searchList: classData,
-            name: el?.name,
-            selectClass: el?.class_list ?? [],
+            template_id: template_id,
+            selectClass: addedClassData,
           }}
           enableReinitialize={true}
-          validationSchema={CreateClassSchema}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
+            let classIds = values.selectClass.map((item) => {
+              return item.id;
+            });
+            let reqBody = {
+              exam_template_id: values.template_id,
+              class_ids: classIds,
+            };
+            addClassTemplate(reqBody, setDialogObj, setOpen, setSearch);
           }}
         >
           {({
@@ -108,24 +139,10 @@ function AddTemplateClassDialog(props) {
             return (
               <>
                 <DialogTitle id="responsive-dialog-title">
-                  {el ? "Edit Class" : "Create Class"}
+                  {"Add class to template"}
                 </DialogTitle>
                 <DialogContent>
                   <Form style={{ width: "100%" }}>
-                    <TextField
-                      multiline
-                      name="name"
-                      label={"Class's name"}
-                      value={values.name}
-                      onChange={handleChange}
-                      style={{ width: "100%", margin: "12px 0" }}
-                      variant="standard"
-                    />
-                    {errors.name && touched.name ? (
-                      FormikError(errors, "name")
-                    ) : (
-                      <div />
-                    )}
                     <div
                       style={{
                         width: "100%",
@@ -150,7 +167,7 @@ function AddTemplateClassDialog(props) {
                             border: "none",
                             marginBottom: "12px",
                           }}
-                          onChange={(e) => console.log(e.target.value)}
+                          onChange={(e) => setSearch(e.target.value)}
                           InputProps={{
                             endAdornment: (
                               <InputAdornment>
@@ -214,7 +231,13 @@ function AddTemplateClassDialog(props) {
                   </Form>
                 </DialogContent>
                 <DialogActions>
-                  <Button autoFocus onClick={() => setOpen(!open)}>
+                  <Button
+                    autoFocus
+                    onClick={() => {
+                      setOpen(!open);
+                      setSearch(null);
+                    }}
+                  >
                     Cancle
                   </Button>
                   <Button onClick={handleSubmit} autoFocus>
@@ -225,6 +248,11 @@ function AddTemplateClassDialog(props) {
             );
           }}
         </Formik>
+        <ApiStatusDialog
+          msg={dialogObj.msg}
+          open={dialogObj.open}
+          status={dialogObj.status}
+        />
       </Dialog>
     </>
   );

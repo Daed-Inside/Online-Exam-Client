@@ -28,20 +28,20 @@ function Routings({ children, ...renderProps }) {
     if (token) {
       // navigate("/dashboard");
     } else {
-      //navigate("/login");
+      navigate("/login");
     }
   }, []);
 
-  window.addEventListener("storage", () => {
-    const token = localStorage.getItem(constant.localStorage.TOKEN);
-    if (!token) {
-      //navigate("/login");
-    }
-  });
+  // window.addEventListener("storage", () => {
+  //   const token = localStorage.getItem(constant.localStorage.TOKEN);
+  //   if (!token) {
+  //     //navigate("/login");
+  //   }
+  // });
 
   return (
     <>
-      {true ? (
+      {token ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route exact path="/template/create" element={<CreateTest />} />

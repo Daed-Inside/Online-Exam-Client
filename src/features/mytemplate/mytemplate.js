@@ -21,11 +21,18 @@ import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
 import { myTemplateHeader, SampleMyTest } from "../../constants/sample";
 import AddTemplateClassDiaglog from "./component/manageTemplClass";
+import moment from "moment";
 import "./mytemplate.css";
 
 function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
   axios
-    .get(`${constant.BASEURL}/core/exam-template`, { params: pagingObj })
+    .get(`${constant.BASEURL}/core/exam-template`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+      params: pagingObj,
+    })
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
@@ -54,10 +61,12 @@ export default function MyTemplate() {
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
-  const [dense, setDense] = useState(false);
   const [emptyRow, setEmptyRow] = useState(0);
   const [tableData, setTableData] = useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [dialogStatus, setDialogStatus] = useState({
+    open: false,
+    template_id: null,
+  });
   const [pagingObj, setPagingObj] = useState({
     page: 1,
     limit: 7,
@@ -67,7 +76,7 @@ export default function MyTemplate() {
     sort_by: "id",
     sort_type: "ASC",
   });
-
+  const dense = false;
   useEffect(() => {
     fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
   }, []);
@@ -147,10 +156,17 @@ export default function MyTemplate() {
                             {row.name}
                           </TableCell>
                           <TableCell align="left">{row.subject_name}</TableCell>
+                          <TableCell align="left">{row.duration} Min</TableCell>
                           <TableCell align="left" className="word-break-cell">
-                            {row.start_date}
+                            {moment(row.start_date).format(
+                              "MM/DD/YYYY hh:mm:ss"
+                            )}
                           </TableCell>
-                          <TableCell align="left">{row.created_date}</TableCell>
+                          <TableCell align="left">
+                            {moment(row.created_date).format(
+                              "MM/DD/YYYY hh:mm:ss"
+                            )}
+                          </TableCell>
                           <TableCell align="center">
                             <EditIcon
                               onClick={(e) =>
@@ -159,7 +175,12 @@ export default function MyTemplate() {
                               className="icon"
                             />
                             <AddCircleOutlineOutlinedIcon
-                              onClick={() => setOpen(!open)}
+                              onClick={() =>
+                                setDialogStatus({
+                                  open: true,
+                                  template_id: row.id,
+                                })
+                              }
                               className="icon"
                             />
                             <DeleteIcon
@@ -173,10 +194,12 @@ export default function MyTemplate() {
                     {emptyRow > 0 && (
                       <TableRow
                         style={{
-                          height: (dense ? 33 : 53) * emptyRow,
+                          height:
+                            (dense ? 33 : 53) *
+                            (emptyRow > 0 ? emptyRow + 0.5 : emptyRow),
                         }}
                       >
-                        <TableCell colSpan={6} />
+                        <TableCell colSpan={7} />
                       </TableRow>
                     )}
                   </TableBody>
@@ -214,7 +237,11 @@ export default function MyTemplate() {
           </Paper>
         </div>
       </div>
-      <AddTemplateClassDiaglog open={open} setOpen={setOpen} />
+      <AddTemplateClassDiaglog
+        template_id={dialogStatus.template_id}
+        open={dialogStatus.open}
+        setOpen={setDialogStatus}
+      />
     </>
   );
 }

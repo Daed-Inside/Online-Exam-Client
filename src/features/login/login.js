@@ -20,12 +20,9 @@ function handleSubmit(values, navigate) {
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
-        localStorage.setItem(constant.localStorage.TOKEN, e.access_token);
+        localStorage.setItem(constant.localStorage.TOKEN, res.data.data.access);
         navigate("/dashboard");
       });
-      setTimeout(() => {
-        alert("Login success");
-      }, 400);
     })
     .catch((error) => {
       console.log(error);
