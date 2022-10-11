@@ -35,7 +35,12 @@ function fetchSubject(setSubject) {
 
 function createTestAPI(reqBody, setDialogObj) {
   axios
-    .post(`${constant.BASEURL}/core/exam-template`, reqBody)
+    .post(`${constant.BASEURL}/core/exam-template`, reqBody, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
     .then((res) => {
       handleApi(res, (e) => {
         setDialogObj({

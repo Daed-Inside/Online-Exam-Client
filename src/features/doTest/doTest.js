@@ -186,16 +186,16 @@ const ContentBlock = ({ el, label, json }) => {
 const renderer = ({ hours, minutes, seconds, completed }) => {
   if (completed) {
     // Render a completed state
-    window.location.href = "/manage/test";
+    // window.location.href = "/manage/test";
   } else {
     return (
-      <span>
+      <span className="header-text">
         {hours}:{minutes}:{seconds}
       </span>
     );
   }
   return (
-    <span>
+    <span className="header-text">
       {hours}:{minutes}:{seconds}
     </span>
   );

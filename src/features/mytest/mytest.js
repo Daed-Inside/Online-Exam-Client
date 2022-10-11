@@ -28,10 +28,17 @@ import {
   SampleMyTest,
 } from "../../constants/sample";
 import "./mytest.css";
+import moment from "moment";
 
 function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
   axios
-    .get(`${constant.BASEURL}/core/exam-result`, { params: pagingObj })
+    .get(`${constant.BASEURL}/core/exam-result`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+      params: pagingObj,
+    })
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
@@ -58,6 +65,7 @@ function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
 
 export default function MyTest() {
   const navigate = useNavigate();
+  const currentDate = new Date();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [tabValue, setTabValue] = useState("COMPLETED");
@@ -72,6 +80,7 @@ export default function MyTest() {
     totalPages: 0,
     sort_by: "id",
     sort_type: "ASC",
+    tab: "COMPLETED",
   });
 
   useEffect(() => {
@@ -80,7 +89,7 @@ export default function MyTest() {
 
   useEffect(() => {
     fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
-  }, [pagingObj.search, pagingObj.page]);
+  }, [pagingObj.search, pagingObj.page, pagingObj.tab]);
 
   function handleSearch(searchStr) {
     let newPaging = { ...pagingObj };
@@ -88,7 +97,10 @@ export default function MyTest() {
     setPagingObj(newPaging);
   }
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = async (event, newValue) => {
+    let newPaging = { ...pagingObj };
+    newPaging.tab = newValue;
+    await setPagingObj(newPaging);
     setTabValue(newValue);
   };
 
@@ -177,7 +189,11 @@ export default function MyTest() {
                               >
                                 {row.first_name} {row.last_name}
                               </TableCell>
-                              <TableCell align="left">{row.date}</TableCell>
+                              <TableCell align="left">
+                                {moment(row.created_date).format(
+                                  "MM/DD/YYYY hh:mm:ss"
+                                )}
+                              </TableCell>
                               <TableCell align="center">{row.score}</TableCell>
                             </TableRow>
                           );
@@ -256,26 +272,38 @@ export default function MyTest() {
                               >
                                 {row.name}
                               </TableCell>
-                              <TableCell align="left">{row.subject}</TableCell>
+                              <TableCell align="left">
+                                {row.subject_name}
+                              </TableCell>
                               <TableCell
                                 align="left"
                                 className="word-break-cell"
                               >
                                 {row.first_name} {row.last_name}
                               </TableCell>
-                              <TableCell align="left">{row.date}</TableCell>
+                              <TableCell align="left">
+                                {moment(row.created_date).format(
+                                  "MM/DD/YYYY hh:mm:ss"
+                                )}
+                              </TableCell>
                               <TableCell align="center">
-                                <Button
-                                  sx={{
-                                    padding: "0 0 0 0",
-                                    fontSize: "12px",
-                                  }}
-                                  onClick={(e) =>
-                                    navigate(`/test/conduct/${row.id}`)
-                                  }
-                                >
-                                  Take exam
-                                </Button>
+                                {moment(row.expired_date).isSameOrAfter(
+                                  currentDate
+                                ) ? (
+                                  <Button
+                                    sx={{
+                                      padding: "0 0 0 0",
+                                      fontSize: "12px",
+                                    }}
+                                    onClick={(e) =>
+                                      navigate(`/test/conduct/${row.id}`)
+                                    }
+                                  >
+                                    Take exam
+                                  </Button>
+                                ) : (
+                                  <p>EXPIRED</p>
+                                )}
                               </TableCell>
                             </TableRow>
                           );
