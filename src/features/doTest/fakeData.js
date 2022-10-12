@@ -11,119 +11,24 @@ export const fakeData = {
   subject_name: "Math",
   description: "Mô tả gì đó",
   questions: [
-    {
-      id: "question-1",
-      content: "What is your age?",
-      textAns: "",
-      question_type: 0,
-      is_answered: false,
-      selected: [],
-      type: "radio",
-      answers: [
-        {
-          id: "1",
-          value: "over 50 years old",
-        },
-        {
-          id: "2",
-          value: "from 36 to 50 years old",
-        },
-      ],
-    },
-    {
-      id: "question-2",
-      content: "What is your age?",
-      textAns: "",
-      question_type: 1,
-      is_answered: false,
-      selected: [],
-      type: "checkbox",
-      answers: [
-        {
-          id: "1",
-          value: "over 50 years old",
-        },
-        {
-          id: "2",
-          value: "from 36 to 50 years old",
-        },
-      ],
-    },
-    {
-      id: "question-3",
-      content: "What is your age?",
-      textAns: "",
-      question_type: 0,
-      is_answered: false,
-      selected: [],
-      type: "radio",
-      answers: [
-        {
-          id: "1",
-          value: "over 50 years old",
-        },
-        {
-          id: "2",
-          value: "from 36 to 50 years old",
-        },
-      ],
-    },
-    {
-      id: "question-4",
-      content: "What is your age?",
-      textAns: "",
-      question_type: 1,
-      is_answered: false,
-      selected: [],
-      type: "checkbox",
-      answers: [
-        {
-          id: "1",
-          value: "over 50 years old",
-        },
-        {
-          id: "2",
-          value: "from 36 to 50 years old",
-        },
-      ],
-    },
-    {
-      id: "question-5",
-      content: "What is your age?",
-      textAns: "",
-      question_type: 0,
-      is_answered: false,
-      selected: [],
-      type: "radio",
-      answers: [
-        {
-          id: "1",
-          value: "over 50 years old",
-        },
-        {
-          id: "2",
-          value: "from 36 to 50 years old",
-        },
-      ],
-    },
-    {
-      id: "question-6",
-      content: "What is your age?",
-      textAns: "",
-      question_type: 1,
-      is_answered: false,
-      selected: [],
-      type: "checkbox",
-      answers: [
-        {
-          id: "1",
-          value: "over 50 years old",
-        },
-        {
-          id: "2",
-          value: "from 36 to 50 years old",
-        },
-      ],
-    },
+    // {
+    //   id: "question-1",
+    //   content: "What is your age?",
+    //   textAns: "",
+    //   question_type: 0,
+    //   is_answered: false,
+    //   selected: [],
+    //   type: "radio",
+    //   answers: [
+    //     {
+    //       id: "1",
+    //       value: "over 50 years old",
+    //     },
+    //     {
+    //       id: "2",
+    //       value: "from 36 to 50 years old",
+    //     },
+    //   ],
+    // },
   ],
 };

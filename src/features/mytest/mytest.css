@@ -75,6 +75,11 @@
   font-size: 15px;
 }
 
+.blacked-text-small {
+  color: #262626;
+  font-size: 12px;
+}
+
 .total-element-footer {
   flex: 1;
   float: left;

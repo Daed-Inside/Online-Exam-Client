@@ -83,9 +83,9 @@ export default function MyTest() {
     tab: "COMPLETED",
   });
 
-  useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
-  }, []);
+  // useEffect(() => {
+  //   fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
+  // }, []);
 
   useEffect(() => {
     fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
@@ -100,6 +100,7 @@ export default function MyTest() {
   const handleTabChange = async (event, newValue) => {
     let newPaging = { ...pagingObj };
     newPaging.tab = newValue;
+    newPaging.page = 1;
     await setPagingObj(newPaging);
     setTabValue(newValue);
   };
@@ -244,7 +245,7 @@ export default function MyTest() {
                     <Table
                       sx={{ minWidth: 750, height: "100%" }}
                       aria-labelledby="tableTitle"
-                      size={dense ? "small" : "medium"}
+                      size={true ? "small" : "medium"}
                     >
                       <EnhancedTableHead
                         header={IncomingTabHeader}
@@ -287,22 +288,31 @@ export default function MyTest() {
                                 )}
                               </TableCell>
                               <TableCell align="center">
-                                {moment(row.expired_date).isSameOrAfter(
-                                  currentDate
-                                ) ? (
+                                {moment()
+                                  .add(1, "minutes")
+                                  .isSameOrBefore(moment(row.start_date)) ? (
+                                  <p className="blacked-text-small">WAITING</p>
+                                ) : moment(row.expired_date).isSameOrAfter(
+                                    moment()
+                                  ) ? (
                                   <Button
                                     sx={{
                                       padding: "0 0 0 0",
                                       fontSize: "12px",
+                                      height: "80%",
                                     }}
-                                    onClick={(e) =>
-                                      navigate(`/test/conduct/${row.id}`)
+                                    onClick={
+                                      (e) => navigate(`/test/conduct/${row.id}`)
+                                      // {
+                                      //   console.log(new Date(row.expired_date));
+                                      //   console.log(new Date());
+                                      // }
                                     }
                                   >
                                     Take exam
                                   </Button>
                                 ) : (
-                                  <p>EXPIRED</p>
+                                  <p className="blacked-text-small">EXPIRED</p>
                                 )}
                               </TableCell>
                             </TableRow>

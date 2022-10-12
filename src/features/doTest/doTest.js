@@ -13,10 +13,27 @@ import { SubmitDialog } from "../../components/dialog/dialog.js";
 
 function fetchTestTemplate(id, setFormData) {
   axios
-    .get(`${constant.BASEURL}/core/test/${id}`)
+    .get(`${constant.BASEURL}/core/test/${id}`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
     .then((res) => {
       handleApi(res, (e) => {
-        setFormData(res.data.data);
+        let lcstr_temp = localStorage.getItem(`test_id_${id}`);
+        if (lcstr_temp == null || lcstr_temp == undefined) {
+          setFormData(res.data.data);
+        } else {
+          let lcstr_temp_obj = JSON.parse(lcstr_temp);
+          let questions_alt = res.data.data.questions?.map((e) => {
+            e.selected = lcstr_temp_obj[e.id];
+            e.is_answered = true;
+            return e;
+          });
+          let new_formData = { ...res.data.data, questions: questions_alt };
+          setFormData(new_formData);
+        }
       });
       // setTimeout(() => {
       //   alert("Login success");
@@ -32,31 +49,48 @@ function fetchTestTemplate(id, setFormData) {
 
 function handleSubmit(id, reqBody, setDialogObj) {
   axios
-    .post(`${constant.BASEURL}/core/test/submit/${id}`, reqBody)
+    .post(`${constant.BASEURL}/core/test/submit/${id}`, reqBody, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
     .then((res) => {
       handleApi(res, (e) => {
-        console.log(res.data);
         setDialogObj({
           open: true,
           msg: res.data.message,
           status: res.data.dialog_code,
           score: res.data.data,
         });
-        setTimeout(() => {
-          setDialogObj({
+        setTimeout(async () => {
+          await setDialogObj({
             open: false,
             msg: res.data.message,
             status: res.data.dialog_code,
             score: res.data.data,
           });
         }, 2000);
+        localStorage.removeItem(`test_id_${id}`);
+        window.location.href = "/manage/test";
       });
     })
     .catch((error) => {
-      console.log(error);
-      setTimeout(() => {
-        alert(error);
-      }, 400);
+      setDialogObj({
+        open: true,
+        msg: "System error",
+        status: -1,
+        score: null,
+      });
+      setTimeout(async () => {
+        await setDialogObj({
+          open: false,
+          msg: "System error",
+          status: -1,
+          score: null,
+        });
+      }, 2000);
+      window.location.href = "/manage/test";
     });
 }
 
@@ -74,7 +108,44 @@ function DoTest() {
   });
   useEffect(() => {
     fetchTestTemplate(id, setFormData);
+    // setInterval(() => {
+    //   if (formData != null && formData.questions.length > 0) {
+    //     let temp_val = {};
+    //     formData.questions.map((item) => {
+    //       temp_val[item.id] = item.selected;
+    //     });
+    //     localStorage.setItem(`test_id_${id}`, JSON.stringify(temp_val));
+    //   }
+    // }, 20000);
   }, []);
+
+  useEffect(() => {
+    if (formData != null && formData.questions.length > 0) {
+      let temp_val = {};
+      formData.questions.map((item) => {
+        temp_val[item.id] = item.selected;
+      });
+      localStorage.setItem(`test_id_${id}`, JSON.stringify(temp_val));
+    }
+  }, [formData]);
+
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      handleSubmit(id, formData, setDialogObj);
+      // window.location.href = "/manage/test";
+    } else {
+      return (
+        <span className="header-text">
+          {hours}:{minutes}:{seconds}
+        </span>
+      );
+    }
+    return (
+      <span className="header-text">
+        {hours}:{minutes}:{seconds}
+      </span>
+    );
+  };
 
   return (
     <>
@@ -134,7 +205,7 @@ function DoTest() {
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
           <p>Remaining time</p>
           <Countdown
-            date={new Date(formData.test_end_date)}
+            date={new Date(formData.expired_date)}
             renderer={renderer}
           />
         </div>
@@ -180,24 +251,6 @@ const ContentBlock = ({ el, label, json }) => {
         <div style={{ margin: "auto" }}>{label}</div>
       </div>
     </>
-  );
-};
-
-const renderer = ({ hours, minutes, seconds, completed }) => {
-  if (completed) {
-    // Render a completed state
-    // window.location.href = "/manage/test";
-  } else {
-    return (
-      <span className="header-text">
-        {hours}:{minutes}:{seconds}
-      </span>
-    );
-  }
-  return (
-    <span className="header-text">
-      {hours}:{minutes}:{seconds}
-    </span>
   );
 };
 

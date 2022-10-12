@@ -22,13 +22,17 @@ import constant from "../../../constants/constant";
 import jwt_decode from "jwt-decode";
 
 const pages = [
+  { label: "Dashboard", url: "/dashboard" },
   { label: "Create Test", url: "/template/create" },
   { label: "My Test", url: "/manage/test" },
   { label: "Manage Class", url: "/manage/class" },
   { label: "Manage Template", url: "/manage/template" },
 ];
 
-const studentPages = [{ label: "My Test", url: "/manage/test" }];
+const studentPages = [
+  { label: "Dashboard", url: "/dashboard" },
+  { label: "My Test", url: "/manage/test" },
+];
 
 const fakePages = [];
 
