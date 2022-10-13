@@ -13,11 +13,6 @@ export const SignUpSchema = Yup.object().shape({
     .min(2, "Too short")
     .max(50, "Too Long")
     .required("Required"),
-  // confirmPass: Yup.string()
-  //   .oneOf([Yup.ref("password"), null], "Passwords must match")
-  //   .min(2, "Too short")
-  //   .max(50, "Too Long")
-  //   .required("Required"),
   address: Yup.string()
     .min(2, "Too short")
     .max(50, "Too Long")
@@ -27,13 +22,29 @@ export const SignUpSchema = Yup.object().shape({
     .min(8, "Invalid phone number")
     .max(14, "Invalid phone number")
     .required("Required"),
-  role: Yup.string()
-    .min(2, "Too short")
-    .max(50, "Too Long")
-    .required("Required"),
 });
 
 export const SignInSchema = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Required"),
   password: Yup.string().required("Required"),
+});
+
+export const EditPersonalSchema = Yup.object().shape({
+  first_name: Yup.string()
+    .min(2, "Too short")
+    .max(50, "Too Long")
+    .required("Required"),
+  last_name: Yup.string()
+    .min(2, "Too short")
+    .max(50, "Too Long")
+    .required("Required"),
+  address: Yup.string()
+    .min(2, "Too short")
+    .max(50, "Too Long")
+    .required("Required"),
+  phone: Yup.string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .min(8, "Invalid phone number")
+    .max(14, "Invalid phone number")
+    .required("Required"),
 });

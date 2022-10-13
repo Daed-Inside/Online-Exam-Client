@@ -44,6 +44,7 @@ function Routings({ children, ...renderProps }) {
       {token ? (
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/personal-info" element={<Personal />} />
           <Route exact path="/template/create" element={<CreateTest />} />
           <Route exact path="/template/edit/:id" element={<CreateTest />} />
           <Route exact path="/manage/template" element={<MyTemplate />} />

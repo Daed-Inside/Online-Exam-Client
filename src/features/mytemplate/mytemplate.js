@@ -206,13 +206,6 @@ export default function MyTemplate() {
                 </Table>
               </TableContainer>
             </div>
-            {/* <TablePagination
-              rowsPerPageOptions={[5, 10]}
-              component="div"
-              count={pagingObj.totalElements}
-              rowsPerPage={pagingObj.limit}
-              page={pagingObj.page}
-            /> */}
             <div className="table-footer-section">
               <div className="total-element-footer blacked-text">
                 Total items: {pagingObj.totalElements}

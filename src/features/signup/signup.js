@@ -11,27 +11,51 @@ import constant from "../../constants/constant";
 import { showToast } from "../../components/toast/toast";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import ApiStatusDialog from "../../components/dialog/dialog.js";
+import React, { useEffect, useState } from "react";
 
-function handleSubmit(values, navigate) {
+function handleSubmit(values, navigate, setDialogObj) {
   const body = {
     email: values.email,
     phone: values.phone,
     address: values.address,
-    username: values.email,
-    password: values.password,
-    first_name: "Khiem",
-    last_name: "Pham",
+    first_name: values.first_name,
+    last_name: values.last_name,
     role: values.role,
   };
 
   axios
-    .post(`${constant.BASEURL}/core/register`, body)
+    .post(`${constant.BASEURL}/core/user`, body)
     .then((res) => {
       handleApi(res, (e) => {
-        setTimeout(() => {
-          showToast(res.data.message, "success");
-          navigate("/login");
-        }, 400);
+        if (res.data.code !== 1) {
+          setDialogObj({
+            open: true,
+            msg: res.data.message,
+            status: -1,
+          });
+          setTimeout(() => {
+            setDialogObj({
+              open: false,
+              msg: res.data.message,
+              status: -1,
+            });
+          }, 2000);
+        } else {
+          setDialogObj({
+            open: true,
+            msg: res.data.message,
+            status: 1,
+          });
+          setTimeout(async () => {
+            await setDialogObj({
+              open: false,
+              msg: res.data.message,
+              status: 1,
+            });
+            navigate("/login");
+          }, 2000);
+        }
       });
     })
     .catch((error) => {
@@ -41,6 +65,11 @@ function handleSubmit(values, navigate) {
 
 function SignUp() {
   const navigate = useNavigate();
+  const [dialogObj, setDialogObj] = useState({
+    open: false,
+    msg: "OK",
+    status: 1,
+  });
   return (
     <>
       <div className="signup-layout">
@@ -64,8 +93,9 @@ function SignUp() {
               enableReinitialize={true}
               validationSchema={SignUpSchema}
               onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values, navigate);
+                handleSubmit(values, navigate, setDialogObj);
                 setSubmitting(false);
+                // console.log(values);
               }}
             >
               {({
@@ -95,8 +125,8 @@ function SignUp() {
                       name="first_name"
                       placeholder="First name"
                     />
-                    {errors.password ? (
-                      FormikError(errors, "password")
+                    {errors.first_name ? (
+                      FormikError(errors, "first_name")
                     ) : (
                       <div />
                     )}
@@ -104,12 +134,12 @@ function SignUp() {
                   <div className="input-section">
                     <Field
                       className="signup-input"
-                      type="password"
-                      name="confirmPass"
-                      placeholder="Confirm your password"
+                      type="text"
+                      name="last_name"
+                      placeholder="Last name"
                     />
-                    {errors.confirmPass ? (
-                      FormikError(errors, "confirmPass")
+                    {errors.last_name ? (
+                      FormikError(errors, "last_name")
                     ) : (
                       <div />
                     )}
@@ -153,7 +183,7 @@ function SignUp() {
                     className="signup-button"
                     type="submit"
                     disabled={isSubmitting}
-                    onSubmit={handleSubmit}
+                    // onSubmit={handleSubmit}
                   >
                     Submit
                   </button>
@@ -170,6 +200,11 @@ function SignUp() {
         </div>
       </div>
       <p>Sign up</p>
+      <ApiStatusDialog
+        msg={dialogObj.msg}
+        open={dialogObj.open}
+        status={dialogObj.status}
+      />
     </>
   );
 }

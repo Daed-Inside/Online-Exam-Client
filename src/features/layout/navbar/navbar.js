@@ -36,8 +36,6 @@ const studentPages = [
 
 const fakePages = [];
 
-const settings = ["Profile", "Dashboard"];
-
 const NavBar = () => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -199,11 +197,22 @@ const NavBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                key={"logout"}
+                onClick={() => {
+                  navigate("/personal-info");
+                }}
+              >
+                <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem
+                key={"logout"}
+                onClick={() => {
+                  console.log("PASSWORD CHANGED");
+                }}
+              >
+                <Typography textAlign="center">Change Password</Typography>
+              </MenuItem>
               <MenuItem
                 key={"logout"}
                 onClick={() => {

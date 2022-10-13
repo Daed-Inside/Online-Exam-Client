@@ -22,6 +22,7 @@ import ManageClassDiaglog from "./component/manageClassDialog";
 import "./manageClass.css";
 import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
 import Pagination from "@mui/material/Pagination";
+import moment from "moment";
 
 // * fetch class info api
 function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
@@ -59,6 +60,10 @@ export default function ManageClass() {
   const [emptyRow, setEmptyRow] = useState(0);
   const [open, setOpen] = React.useState(false);
   const [tableData, setTableData] = useState([]);
+  const [dialogStatus, setDialogStatus] = useState({
+    open: false,
+    el: null,
+  });
   const [pagingObj, setPagingObj] = useState({
     page: 1,
     limit: 7,
@@ -127,7 +132,7 @@ export default function ManageClass() {
                 <Table
                   sx={{ minWidth: 750, height: "100%" }}
                   aria-labelledby="tableTitle"
-                  size={dense ? "small" : "medium"}
+                  size={true ? "small" : "medium"}
                 >
                   <EnhancedTableHead
                     header={ManageClassHeader}
@@ -139,7 +144,9 @@ export default function ManageClass() {
                     {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
                     {tableData.map((row, index) => {
-                      return <BodyItem row={row} />;
+                      return (
+                        <BodyItem row={row} editDialog={setDialogStatus} />
+                      );
                     })}
                     {emptyRow > 0 && (
                       <TableRow
@@ -154,13 +161,6 @@ export default function ManageClass() {
                 </Table>
               </TableContainer>
             </div>
-            {/* <TablePagination
-              rowsPerPageOptions={[5, 10]}
-              component="div"
-              count={SampleManageClass.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-            /> */}
             <div className="table-footer-section">
               <div className="total-element-footer blacked-text">
                 Total items: {pagingObj.totalElements}
@@ -185,31 +185,38 @@ export default function ManageClass() {
           </Paper>
         </div>
       </div>
-      <ManageClassDiaglog open={open} setOpen={setOpen} />
+      <ManageClassDiaglog
+        open={dialogStatus.open}
+        setOpen={setDialogStatus}
+        el={dialogStatus.el}
+      />
     </>
   );
 }
 
 const BodyItem = (props) => {
   const [open, setOpen] = useState(false);
-  const { row } = props;
+  const { row, editDialog } = props;
   return (
-    <>
-      <TableRow hover key={row.id}>
-        <TableCell component="th" scope="row" padding="normal" align="center">
-          {row.id}
-        </TableCell>
-        <TableCell align="left" className="word-break-cell">
-          {row.name}
-        </TableCell>
-        <TableCell align="left">{row.student_count} members</TableCell>
-        <TableCell align="left">
-          <EditIcon onClick={() => setOpen(true)} className="icon" />
-          <DeleteIcon onClick={() => handleDelete(row.id)} className="icon" />
-        </TableCell>
-      </TableRow>
-      <ManageClassDiaglog open={open} setOpen={setOpen} el={row} />
-    </>
+    <TableRow hover key={row.id}>
+      <TableCell component="th" scope="row" padding="normal" align="center">
+        {row.id}
+      </TableCell>
+      <TableCell align="left" className="word-break-cell">
+        {row.name}
+      </TableCell>
+      <TableCell align="left">{row.student_count} members</TableCell>
+      <TableCell align="left">
+        {moment(row.created_date).format("MM/DD/YYYY hh:mm:ss")}
+      </TableCell>
+      <TableCell align="center">
+        <EditIcon
+          onClick={() => editDialog({ el: row, open: true })}
+          className="icon"
+        />
+        <DeleteIcon onClick={() => handleDelete(row.id)} className="icon" />
+      </TableCell>
+    </TableRow>
   );
 };
 

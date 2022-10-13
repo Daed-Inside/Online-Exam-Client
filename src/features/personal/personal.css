@@ -1,29 +1,92 @@
 .personal-layout {
-    height: 85vh;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    margin: 20px 200px 0px 200px;
-    border-radius: 8px;
-    box-shadow: #cccccc;
+  height: 85vh;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  margin: 20px 200px 0px 200px;
+  border-radius: 8px;
+  box-shadow: #cccccc;
+  display: flex;
 }
 
 .personal-left-section {
-    width: 30%;
-    display: inline-block;
-    background-color: blue;
-    height: 100%;
-    box-shadow: #cccccc;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
+  /* width: 30%; */
+  flex: 3;
+  display: inline-block;
+  /* background-color: blue; */
+  height: 100%;
+  box-shadow: #cccccc;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-right: 2px solid #cccccc;
+  /* border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px; */
 }
 
 .personal-right-section {
-    width: 70%;
-    display: inline-block;
-    background-color: red;
-    height: 100%;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
+  /* width: 70%; */
+  flex: 7;
+  display: inline-block;
+  /* background-color: red; */
+  height: 100%;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.personal-right-body {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.personal-title {
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-form {
+  margin-bottom: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.personal-body {
+  flex: 9;
+}
+
+.input-section {
+  margin-bottom: 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.justify_center {
+  justify-content: center;
+  align-items: center;
+}
+
+.update-button {
+  flex: 1;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  margin-top: 12px;
+  padding: 16px;
+  font-size: 1.2rem;
+  color: #ffffff;
+  background-color: #00917c;
+  width: 60%;
+}
+
+.blacked-text {
+  display: inline-block;
+  color: #262626;
+  font-size: 15px;
+  flex: 1;
 }

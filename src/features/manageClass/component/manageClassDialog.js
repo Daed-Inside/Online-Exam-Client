@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { FormikError } from "../../../components/FormikError/FormikError";
 import { handleApi } from "../../../components/utils/utils";
 import constant from "../../../constants/constant";
+import ApiStatusDialog from "../../../components/dialog/dialog.js";
 import axios from "axios";
 import * as Yup from "yup";
 
@@ -23,60 +24,92 @@ export const CreateClassSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
 });
 
-function fetchStudent(setStudentData) {
+function fetchStudent(setStudentData, setAddedStudent, search, class_id) {
   axios
-  .get(`${constant.BASEURL}/core/student`)
-  .then((res) => {
-    handleApi(res, (e) => {
-      //localStorage.setItem(constant.localStorage.EMAIL, e.email);
-      setStudentData(res.data.data)
-    });
-    // setTimeout(() => {
-    //   alert("Login success");
-    // }, 400);
-  })
-  .catch((error) => {
-    console.log(error);
-    setTimeout(() => {
-      alert(error);
-    }, 400);
-  });
-}
-
-function createClass(values) {
-  axios
-  .post(`${constant.BASEURL}/core/class`, {students:values.selectStu, name:values.name})
-  .then((res) => {
-    handleApi(res, (e) => {
-      //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+    .get(`${constant.BASEURL}/core/student-class`, {
+      params: { class_id: class_id, search: search },
+    })
+    .then((res) => {
+      handleApi(res, (e) => {
+        //localStorage.setItem(constant.localStorage.EMAIL, e.email);
+        setStudentData(res.data.data.non_added_student);
+        setAddedStudent(res.data.data.added_student);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
       setTimeout(() => {
-        alert("Tạo lớp thành công");
+        alert(error);
       }, 400);
     });
-    // setTimeout(() => {
-    //   alert("Login success");
-    // }, 400);
-  })
-  .catch((error) => {
-    console.log(error);
-    setTimeout(() => {
-      alert(error);
-    }, 400);
-  });
+}
+
+function createClass(values, setDialogObj, setOpen, setSearch) {
+  axios
+    .post(`${constant.BASEURL}/core/class`, {
+      students: values.selectStu,
+      name: values.name,
+      class_id: values.class_id,
+    })
+    .then((res) => {
+      handleApi(res, async (e) => {
+        await setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
+        setTimeout(() => {
+          setDialogObj({
+            open: false,
+            msg: res.data.message,
+            status: 1,
+          });
+          setOpen(false);
+          setSearch(null);
+        }, 2000);
+      });
+    })
+    .catch(async (error) => {
+      await setDialogObj({
+        open: true,
+        msg: "System error",
+        status: -1,
+      });
+      setTimeout(() => {
+        setDialogObj({
+          open: false,
+          msg: "System error",
+          status: -1,
+        });
+        setOpen(false);
+      }, 2000);
+    });
 }
 
 function ManageClassDiaglog(props) {
   const { el, open, setOpen } = props;
-  const [studentData, setStudentData] = React.useState([])
+  const [studentData, setStudentData] = React.useState([]);
+  const [addedStudent, setAddedStudent] = React.useState([]);
+  const [search, setSearch] = React.useState(null);
+  const [dialogObj, setDialogObj] = React.useState({
+    open: false,
+    msg: "OK",
+    status: 1,
+  });
   React.useEffect(() => {
-    fetchStudent(setStudentData)
-  }, []);
-
-  function firstLoad() {
-    if (el) {
-    } else {
+    if (el?.id != null && el?.id != undefined) {
+      fetchStudent(setStudentData, setAddedStudent, search, el?.id);
     }
-  }
+  }, [el?.id]);
+
+  React.useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchStudent(setStudentData, setAddedStudent, search, el?.id);
+      // Send Axios request here
+    }, 1000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
+
   return (
     <>
       <Dialog
@@ -86,11 +119,17 @@ function ManageClassDiaglog(props) {
         aria-labelledby="responsive-dialog-title"
       >
         <Formik
-          initialValues={{searchList: studentData, name: el?.name, selectStu: el?.student_list ?? [] }}
+          initialValues={{
+            searchList: studentData,
+            name: el?.name,
+            selectStu: addedStudent,
+          }}
           enableReinitialize={true}
           validationSchema={CreateClassSchema}
           onSubmit={(values, { setSubmitting }) => {
-            createClass(values);
+            let newValue = { ...values };
+            newValue.class_id = el?.id;
+            createClass(newValue, setDialogObj, setOpen, setSearch);
           }}
         >
           {({
@@ -103,125 +142,131 @@ function ManageClassDiaglog(props) {
             errors,
             touched,
           }) => {
-            return(
-            <>
-              <DialogTitle id="responsive-dialog-title">
-                {el ? "Edit Class" : "Create Class"}
-              </DialogTitle>
-              <DialogContent>
-                <Form style={{ width: "100%" }}>
-                  <TextField
-                    multiline
-                    name="name"
-                    label={"Class's name"}
-                    value={values.name}
-                    onChange={handleChange}
-                    style={{ width: "100%", margin: "12px 0" }}
-                    variant="standard"
-                  />
-                  {errors.name && touched.name ? (
-                    FormikError(errors, "name")
-                  ) : (
-                    <div />
-                  )}
-                  <div
-                    style={{
-                      width: "100%",
-                      margin: "12px 0",
-                      display: "flex",
-                      flexDirection: "row",
-                    }}
-                  >
+            return (
+              <>
+                <DialogTitle id="responsive-dialog-title">
+                  {el ? "Edit Class" : "Create Class"}
+                </DialogTitle>
+                <DialogContent>
+                  <Form style={{ width: "100%" }}>
+                    <TextField
+                      multiline
+                      name="name"
+                      label={"Class's name"}
+                      value={values.name}
+                      onChange={handleChange}
+                      style={{ width: "100%", margin: "12px 0" }}
+                      variant="standard"
+                    />
+                    {errors.name && touched.name ? (
+                      FormikError(errors, "name")
+                    ) : (
+                      <div />
+                    )}
                     <div
                       style={{
-                        borderRadius: "4px",
-                        padding: "12px",
-                        border: "1px solid #bdbdbd",
-                        width: "300px",
-                        height: "300px",
-                        overflow: "auto",
-                      }}
-                    >
-                      <TextField
-                        label="Search here"
-                        style={{
-                          border: "none",
-                          marginBottom: "12px",
-                        }}
-                        onChange={(e) => console.log(e.target.value)}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment>
-                              <IconButton>
-                                <SearchIcon />
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                      {values.searchList?.map((e) => (
-                        <SelectItem
-                          key={e.id}
-                          item={e}
-                          searchList={values.searchList}
-                          values={values}
-                          setFieldValue={setFieldValue}
-                        />
-                      ))}
-                    </div>
-                    <div
-                      style={{
-                        margin: "0 12px",
-                        width: "50px",
-                        justifyContent: "center",
+                        width: "100%",
+                        margin: "12px 0",
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
                       }}
                     >
                       <div
                         style={{
-                          width: "100%",
-                          height: "50px",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
+                          borderRadius: "4px",
+                          padding: "12px",
+                          border: "1px solid #bdbdbd",
+                          width: "300px",
+                          height: "300px",
+                          overflow: "auto",
                         }}
                       >
-                        <ArrowForwardIcon />
+                        <TextField
+                          label="Search here"
+                          style={{
+                            border: "none",
+                            marginBottom: "12px",
+                          }}
+                          onChange={(e) => setSearch(e.target.value)}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment>
+                                <IconButton>
+                                  <SearchIcon />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                        {values.searchList?.map((e) => (
+                          <SelectItem
+                            key={e.id}
+                            item={e}
+                            searchList={values.searchList}
+                            values={values}
+                            setFieldValue={setFieldValue}
+                          />
+                        ))}
+                      </div>
+                      <div
+                        style={{
+                          margin: "0 12px",
+                          width: "50px",
+                          justifyContent: "center",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "50px",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                          }}
+                        >
+                          <ArrowForwardIcon />
+                        </div>
+                      </div>
+                      <div
+                        style={{
+                          borderRadius: "4px",
+                          border: "1px solid #bdbdbd",
+                          width: "300px",
+                          height: "300px",
+                          overflow: "auto",
+                        }}
+                      >
+                        {values.selectStu?.map((e) => (
+                          <RemoveItem
+                            key={e.id}
+                            item={e}
+                            values={values}
+                            setFieldValue={setFieldValue}
+                          />
+                        ))}
                       </div>
                     </div>
-                    <div
-                      style={{
-                        borderRadius: "4px",
-                        border: "1px solid #bdbdbd",
-                        width: "300px",
-                        height: "300px",
-                        overflow: "auto",
-                      }}
-                    >
-                      {values.selectStu?.map((e) => (
-                        <RemoveItem
-                          key={e.id}
-                          item={e}
-                          values={values}
-                          setFieldValue={setFieldValue}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </Form>
-              </DialogContent>
-              <DialogActions>
-                <Button autoFocus onClick={() => setOpen(!open)}>
-                  Cancle
-                </Button>
-                <Button onClick={handleSubmit} autoFocus>
-                  Save
-                </Button>
-              </DialogActions>
-            </>
-          )}}
+                  </Form>
+                </DialogContent>
+                <DialogActions>
+                  <Button autoFocus onClick={() => setOpen(!open)}>
+                    Cancle
+                  </Button>
+                  <Button onClick={handleSubmit} autoFocus>
+                    Save
+                  </Button>
+                </DialogActions>
+              </>
+            );
+          }}
         </Formik>
+        <ApiStatusDialog
+          msg={dialogObj.msg}
+          open={dialogObj.open}
+          status={dialogObj.status}
+        />
       </Dialog>
     </>
   );
@@ -230,20 +275,22 @@ function ManageClassDiaglog(props) {
 export default ManageClassDiaglog;
 
 const SelectItem = (props) => {
-  const { item, setFieldValue, values} = props;
+  const { item, setFieldValue, values } = props;
 
   async function handleAddItem() {
     let newSelItems = values.selectStu;
     newSelItems.push(item);
     await setFieldValue("selectStu", newSelItems);
-    await setFieldValue("searchList", values.searchList.filter((e) => e.id !== item.id));
-    
+    await setFieldValue(
+      "searchList",
+      values.searchList.filter((e) => e.id !== item.id)
+    );
   }
 
   return (
     <>
       <div
-        onClick={async() => await handleAddItem(item)}
+        onClick={async () => await handleAddItem(item)}
         className="manage_class-select_item"
         style={{
           padding: "12px",
@@ -262,7 +309,7 @@ const SelectItem = (props) => {
 };
 
 const RemoveItem = (props) => {
-  const { item, setFieldValue, values} = props;
+  const { item, setFieldValue, values } = props;
   function handleRemoveItem() {
     let newItems = values.selectStu.filter((e) => e.id !== item.id);
     setFieldValue("selectStu", newItems);

@@ -15,7 +15,7 @@ export const ManageClassHeader = [
     isSort: true,
     disablePadding: false,
     label: "Name",
-    width: "40%",
+    width: "30%",
   },
   {
     id: "student_number",
@@ -27,12 +27,21 @@ export const ManageClassHeader = [
     width: "20%",
   },
   {
-    id: "action",
+    id: "created_date",
     middle: false,
     numeric: false,
     isSort: false,
     disablePadding: false,
-    label: "",
+    label: "Created date",
+    width: "20%",
+  },
+  {
+    id: "action",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Action",
     width: "20%",
   },
 ];

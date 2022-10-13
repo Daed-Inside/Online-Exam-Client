@@ -76,20 +76,63 @@ function createTestAPI(reqBody, setDialogObj) {
 
 function fetchEditTemplate(id, setFormData) {
   axios
-    .get(`${constant.BASEURL}/core/exam-template/${id}`)
+    .get(`${constant.BASEURL}/core/exam-template/${id}`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
     .then((res) => {
       handleApi(res, (e) => {
         setFormData(res.data.data);
       });
-      // setTimeout(() => {
-      //   alert("Login success");
-      // }, 400);
     })
     .catch((error) => {
       console.log(error);
       setTimeout(() => {
         alert(error);
       }, 400);
+    });
+}
+
+function editTestAPI(id, reqBody, setDialogObj) {
+  axios
+    .put(`${constant.BASEURL}/core/exam-template/${id}`, reqBody, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
+    .then((res) => {
+      handleApi(res, (e) => {
+        setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
+        setTimeout(() => {
+          setDialogObj({
+            open: false,
+            msg: res.data.message,
+            status: 1,
+          });
+        }, 2000);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      setDialogObj({
+        open: true,
+        msg: "System error",
+        status: 2,
+      });
+      setTimeout(() => {
+        setDialogObj({
+          open: false,
+          msg: "System error",
+          status: 2,
+        });
+      }, 2000);
     });
 }
 
@@ -244,11 +287,9 @@ function CreateTest(props) {
           onClick={() => {
             if (isEdit) {
               // handleUpdate();
-              console.log("_________FORM DATA_____________");
-              console.log(formData);
+              editTestAPI(id, formData, setDialogObj);
             } else {
               // handleCreate();
-              console.log(formData);
               createTestAPI(formData, setDialogObj);
             }
           }}
