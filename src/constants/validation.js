@@ -48,3 +48,15 @@ export const EditPersonalSchema = Yup.object().shape({
     .max(14, "Invalid phone number")
     .required("Required"),
 });
+
+export const ChangePassValidate = Yup.object().shape({
+  password: Yup.string()
+    .min(2, "Too short")
+    .max(50, "Too Long")
+    .required("Required"),
+  confirm_password: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .min(2, "Too short")
+    .max(50, "Too Long")
+    .required("Required"),
+});

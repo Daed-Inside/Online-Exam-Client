@@ -21,9 +21,6 @@ function fetchSubject(setSubject) {
       handleApi(res, (e) => {
         setSubject(res.data.data);
       });
-      // setTimeout(() => {
-      //   alert("Login success");
-      // }, 400);
     })
     .catch((error) => {
       console.log(error);
@@ -158,24 +155,6 @@ function CreateTest(props) {
       fetchSubject(setSubject);
     }
   }, []);
-
-  function handleCreate() {
-    axios
-      .post(`${constant.BASEURL}/core-service/exam`, formData, {
-        headers: {
-          Authorization:
-            "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
-        },
-      })
-      .then((res) => {
-        handleApi(res, (e) => {});
-      })
-      .catch((error) => {
-        setTimeout(() => {
-          alert(error);
-        }, 400);
-      });
-  }
 
   return (
     <>

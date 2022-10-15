@@ -20,11 +20,12 @@ import BookIcon from "../../../assets/images/book.png";
 import { useNavigate } from "react-router-dom";
 import constant from "../../../constants/constant";
 import jwt_decode from "jwt-decode";
+import { ChangePassDialog } from "../../../components/dialog/dialog.js";
 
 const pages = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Create Test", url: "/template/create" },
-  { label: "My Test", url: "/manage/test" },
+  { label: "Test Result", url: "/manage/test" },
   { label: "Manage Class", url: "/manage/class" },
   { label: "Manage Template", url: "/manage/template" },
 ];
@@ -41,6 +42,7 @@ const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [permission, setPermission] = React.useState(-1);
+  const [openStatus, setOpenStatus] = React.useState(false);
 
   React.useEffect(() => {
     const token = localStorage.getItem(constant.localStorage.TOKEN);
@@ -69,14 +71,6 @@ const NavBar = () => {
     <AppBar className="navBar" position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
-          >
-            LOGO
-          </Typography> */}
           <img
             src={BookIcon}
             id="logo"
@@ -166,15 +160,6 @@ const NavBar = () => {
               ))
             )}
           </Box>
-          {/* <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search> */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -198,7 +183,7 @@ const NavBar = () => {
               onClose={handleCloseUserMenu}
             >
               <MenuItem
-                key={"logout"}
+                key={"profile"}
                 onClick={() => {
                   navigate("/personal-info");
                 }}
@@ -206,9 +191,9 @@ const NavBar = () => {
                 <Typography textAlign="center">Profile</Typography>
               </MenuItem>
               <MenuItem
-                key={"logout"}
+                key={"change_password"}
                 onClick={() => {
-                  console.log("PASSWORD CHANGED");
+                  setOpenStatus(true);
                 }}
               >
                 <Typography textAlign="center">Change Password</Typography>
@@ -226,6 +211,7 @@ const NavBar = () => {
           </Box>
         </Toolbar>
       </Container>
+      <ChangePassDialog open={openStatus} setOpen={setOpenStatus} />
     </AppBar>
   );
 };

@@ -8,8 +8,10 @@ import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import ApiStatusDialog from "../../components/dialog/dialog.js";
 
-function handleSubmit(values, navigate) {
+function handleSubmit(values, navigate, setDialogObj) {
   const body = {
     email: values.email,
     password: values.password,
@@ -19,9 +21,26 @@ function handleSubmit(values, navigate) {
     .post(`${constant.BASEURL}/core/login`, body)
     .then((res) => {
       handleApi(res, (e) => {
-        //localStorage.setItem(constant.localStorage.EMAIL, e.email);
-        localStorage.setItem(constant.localStorage.TOKEN, res.data.data.access);
-        navigate("/dashboard");
+        if (res.data.code === 1) {
+          localStorage.setItem(
+            constant.localStorage.TOKEN,
+            res.data.data.access
+          );
+          navigate("/dashboard");
+        } else {
+          setDialogObj({
+            open: true,
+            msg: res.data.message,
+            status: res.data.code,
+          });
+          setTimeout(() => {
+            setDialogObj({
+              open: false,
+              msg: res.data.message,
+              status: res.data.code,
+            });
+          }, 2000);
+        }
       });
     })
     .catch((error) => {
@@ -34,6 +53,11 @@ function handleSubmit(values, navigate) {
 
 function Login() {
   const navigate = useNavigate();
+  const [dialogObj, setDialogObj] = useState({
+    open: false,
+    msg: "OK",
+    status: 1,
+  });
   return (
     <>
       <div className="login-layout">
@@ -50,8 +74,8 @@ function Login() {
               enableReinitialize={true}
               validationSchema={SignInSchema}
               onSubmit={(values, { setSubmitting }) => {
-                handleSubmit(values, navigate);
-                setSubmitting(false);
+                handleSubmit(values, navigate, setDialogObj);
+                // setSubmitting(false);
               }}
             >
               {({
@@ -102,7 +126,7 @@ function Login() {
                   <button
                     className="login-button"
                     type="submit"
-                    disabled={isSubmitting}
+                    // disabled={isSubmitting}
                   >
                     Submit
                   </button>
@@ -118,6 +142,11 @@ function Login() {
           </div>
         </div>
       </div>
+      <ApiStatusDialog
+        msg={dialogObj.msg}
+        open={dialogObj.open}
+        status={dialogObj.status}
+      />
     </>
   );
 }

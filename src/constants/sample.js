@@ -55,6 +55,63 @@ export const SampleHeader = [
   },
 ];
 
+export const LecturerHeader = [
+  {
+    id: "id",
+    middle: true,
+    numeric: false,
+    isSort: true,
+    disablePadding: false,
+    label: "id",
+    width: "10%",
+  },
+  {
+    id: "name",
+    middle: false,
+    numeric: false,
+    isSort: true,
+    disablePadding: false,
+    label: "Name",
+    width: "30%",
+  },
+  {
+    id: "subject",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Subject",
+    width: "15%",
+  },
+  {
+    id: "student",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Student",
+    width: "20%",
+  },
+  {
+    id: "date",
+    middle: false,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Date",
+    width: "15%",
+  },
+  {
+    id: "score",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Score",
+    width: "10%",
+  },
+];
+
 export const IncomingTabHeader = [
   {
     id: "id",
