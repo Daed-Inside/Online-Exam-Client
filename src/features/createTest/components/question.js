@@ -43,6 +43,10 @@ function sleep(delay = 0) {
 function fetchQuestion(setOption, search, level, subject_id, setLoading) {
   axios
     .get(`${constant.BASEURL}/core/question`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
       params: { subject: subject_id, level: level, search: search },
     })
     .then((res) => {

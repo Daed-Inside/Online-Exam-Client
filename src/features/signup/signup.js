@@ -115,7 +115,11 @@ function SignUp() {
                       name="email"
                       placeholder="Email"
                     />
-                    {errors.email ? FormikError(errors, "email") : <div />}
+                    {errors.email && touched.email ? (
+                      FormikError(errors, "email")
+                    ) : (
+                      <div />
+                    )}
                   </div>
                   {/* <ErrorMessage name="email" component="div" /> */}
                   <div className="input-section">
@@ -125,7 +129,7 @@ function SignUp() {
                       name="first_name"
                       placeholder="First name"
                     />
-                    {errors.first_name ? (
+                    {errors.first_name && touched.first_name ? (
                       FormikError(errors, "first_name")
                     ) : (
                       <div />
@@ -138,7 +142,7 @@ function SignUp() {
                       name="last_name"
                       placeholder="Last name"
                     />
-                    {errors.last_name ? (
+                    {errors.last_name && touched.last_name ? (
                       FormikError(errors, "last_name")
                     ) : (
                       <div />
@@ -151,7 +155,11 @@ function SignUp() {
                       name="phone"
                       placeholder="Your phone number"
                     />
-                    {errors.phone ? FormikError(errors, "phone") : <div />}
+                    {errors.phone && touched.phone ? (
+                      FormikError(errors, "phone")
+                    ) : (
+                      <div />
+                    )}
                   </div>
                   {/* <ErrorMessage name="phone" component="div" /> */}
                   <div className="input-section">

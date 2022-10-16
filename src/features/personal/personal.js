@@ -42,20 +42,18 @@ function handleEdit(reqBody, setDialogObj) {
     })
     .then((res) => {
       handleApi(res, (e) => {
-        handleApi(res, (e) => {
+        setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
+        setTimeout(() => {
           setDialogObj({
-            open: true,
+            open: false,
             msg: res.data.message,
             status: 1,
           });
-          setTimeout(() => {
-            setDialogObj({
-              open: false,
-              msg: res.data.message,
-              status: 1,
-            });
-          }, 2000);
-        });
+        }, 2000);
       });
     })
     .catch((error) => {
@@ -96,7 +94,12 @@ export default function Personal(props) {
   return (
     <>
       <div className="personal-layout">
-        <div className="personal-left-section"></div>
+        <div className="personal-left-section">
+          <img
+            src={"file://D:/Study/Final/online-exam-py/core/media/Avatar.jpg"}
+            id="avatar"
+          />
+        </div>
         <div className="personal-right-section">
           <div className="personal-right-body">
             <div className="personal-title">

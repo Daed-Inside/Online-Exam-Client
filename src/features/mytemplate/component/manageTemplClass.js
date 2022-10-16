@@ -21,6 +21,10 @@ import ApiStatusDialog from "../../../components/dialog/dialog.js";
 function fetchClass(setClassData, setAddedClassData, template_id, search) {
   axios
     .get(`${constant.BASEURL}/core/class/all`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
       params: { template_id: template_id, search: search },
     })
     .then((res) => {
@@ -40,7 +44,12 @@ function fetchClass(setClassData, setAddedClassData, template_id, search) {
 
 function addClassTemplate(reqBody, setDialogObj, setOpen, setSearch) {
   axios
-    .post(`${constant.BASEURL}/core/exam-template-class`, reqBody)
+    .post(`${constant.BASEURL}/core/exam-template-class`, reqBody, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
     .then((res) => {
       handleApi(res, async (e) => {
         await setDialogObj({

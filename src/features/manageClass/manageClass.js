@@ -27,7 +27,13 @@ import moment from "moment";
 // * fetch class info api
 function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
   axios
-    .get(`${constant.BASEURL}/core/class`, { params: pagingObj })
+    .get(`${constant.BASEURL}/core/class`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+      params: pagingObj,
+    })
     .then((res) => {
       handleApi(res, (e) => {
         //localStorage.setItem(constant.localStorage.EMAIL, e.email);
@@ -83,12 +89,15 @@ export default function ManageClass() {
   }, [pagingObj.search, pagingObj.page, pagingObj.limit]);
 
   function handleSearch(search_str) {
-    let newPagingObj = { ...pagingObj };
-    newPagingObj.search = search_str;
-    setPagingObj(newPagingObj);
+    const delayDebounceFn = setTimeout(() => {
+      let newPagingObj = { ...pagingObj };
+      newPagingObj.search = search_str;
+      newPagingObj.page = 1;
+      setPagingObj(newPagingObj);
+      // Send Axios request here
+    }, 1000);
+    return () => clearTimeout(delayDebounceFn);
   }
-
-  function handleEdit() {}
 
   return (
     <>

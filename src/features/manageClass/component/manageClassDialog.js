@@ -27,6 +27,10 @@ export const CreateClassSchema = Yup.object().shape({
 function fetchStudent(setStudentData, setAddedStudent, search, class_id) {
   axios
     .get(`${constant.BASEURL}/core/student-class`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
       params: { class_id: class_id, search: search },
     })
     .then((res) => {
@@ -46,11 +50,20 @@ function fetchStudent(setStudentData, setAddedStudent, search, class_id) {
 
 function createClass(values, setDialogObj, setOpen, setSearch) {
   axios
-    .post(`${constant.BASEURL}/core/class`, {
-      students: values.selectStu,
-      name: values.name,
-      class_id: values.class_id,
-    })
+    .post(
+      `${constant.BASEURL}/core/class`,
+      {
+        students: values.selectStu,
+        name: values.name,
+        class_id: values.class_id,
+      },
+      {
+        headers: {
+          Authorization:
+            "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+        },
+      }
+    )
     .then((res) => {
       handleApi(res, async (e) => {
         await setDialogObj({

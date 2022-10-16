@@ -16,7 +16,12 @@ import { onChangeFormValue, onChangeTime } from "./libs/functions";
 
 function fetchSubject(setSubject) {
   axios
-    .get(`${constant.BASEURL}/core/subject`)
+    .get(`${constant.BASEURL}/core/subject`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
     .then((res) => {
       handleApi(res, (e) => {
         setSubject(res.data.data);

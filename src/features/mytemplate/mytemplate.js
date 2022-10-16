@@ -86,9 +86,14 @@ export default function MyTemplate() {
   }, [pagingObj.search, pagingObj.page, pagingObj.search]);
 
   function handleSearch(searchStr) {
-    let newPaging = { ...pagingObj };
-    newPaging.search = searchStr;
-    setPagingObj(newPaging);
+    const delayDebounceFn = setTimeout(() => {
+      let newPaging = { ...pagingObj };
+      newPaging.search = searchStr;
+      newPaging.page = 1;
+      setPagingObj(newPaging);
+      // Send Axios request here
+    }, 1000);
+    return () => clearTimeout(delayDebounceFn);
   }
 
   return (
