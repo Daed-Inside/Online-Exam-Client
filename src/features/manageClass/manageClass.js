@@ -125,7 +125,10 @@ export default function ManageClass() {
                   ),
                 }}
               />
-              <Button id={"btn_create"} onClick={() => setOpen(!open)}>
+              <Button
+                id={"btn_create"}
+                onClick={() => setDialogStatus({ el: null, open: true })}
+              >
                 Create
               </Button>
             </div>

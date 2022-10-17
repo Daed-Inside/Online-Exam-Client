@@ -10,6 +10,7 @@ import { handleApi } from "../../components/utils/utils";
 import axios from "axios";
 import { useParams } from "react-router";
 import { SubmitDialog } from "../../components/dialog/dialog.js";
+import { set } from "date-fns/esm";
 
 function fetchTestTemplate(id, setFormData) {
   axios
@@ -27,8 +28,15 @@ function fetchTestTemplate(id, setFormData) {
         } else {
           let lcstr_temp_obj = JSON.parse(lcstr_temp);
           let questions_alt = res.data.data.questions?.map((e) => {
-            e.selected = lcstr_temp_obj[e.id];
-            e.is_answered = true;
+            let already_answered = lcstr_temp_obj[e.id];
+            e.selected =
+              already_answered != null && already_answered.length > 0
+                ? already_answered
+                : [];
+            e.is_answered =
+              already_answered != null && already_answered.length > 0
+                ? true
+                : false;
             return e;
           });
           let new_formData = { ...res.data.data, questions: questions_alt };
@@ -70,7 +78,7 @@ function handleSubmit(id, reqBody, setDialogObj) {
             status: res.data.dialog_code,
             score: res.data.data,
           });
-        }, 2000);
+        }, 3000);
         localStorage.removeItem(`test_id_${id}`);
         window.location.href = "/manage/test";
       });
@@ -108,15 +116,6 @@ function DoTest() {
   });
   useEffect(() => {
     fetchTestTemplate(id, setFormData);
-    // setInterval(() => {
-    //   if (formData != null && formData.questions.length > 0) {
-    //     let temp_val = {};
-    //     formData.questions.map((item) => {
-    //       temp_val[item.id] = item.selected;
-    //     });
-    //     localStorage.setItem(`test_id_${id}`, JSON.stringify(temp_val));
-    //   }
-    // }, 20000);
   }, []);
 
   useEffect(() => {
@@ -129,10 +128,22 @@ function DoTest() {
     }
   }, [formData]);
 
-  const renderer = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
+  useEffect(() => {
+    if (hasTime === false) {
       handleSubmit(id, formData, setDialogObj);
+    }
+  }, [hasTime]);
+
+  const renderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed && hasTime) {
+      setHasTime(false);
+      // handleSubmit(id, formData, setDialogObj, setHasTime);
       // window.location.href = "/manage/test";
+      return (
+        <span className="header-text">
+          {hours}:{minutes}:{seconds}
+        </span>
+      );
     } else {
       return (
         <span className="header-text">
@@ -140,11 +151,6 @@ function DoTest() {
         </span>
       );
     }
-    return (
-      <span className="header-text">
-        {hours}:{minutes}:{seconds}
-      </span>
-    );
   };
 
   return (
@@ -190,13 +196,6 @@ function DoTest() {
         <Button
           onClick={() => {
             handleSubmit(id, formData, setDialogObj);
-            // setDialogObj({
-            //   open: true,
-            //   msg: "What ever",
-            //   status: 1,
-            //   score: 50,
-            // });
-            // console.log(formData);
           }}
           variant="contained"
         >

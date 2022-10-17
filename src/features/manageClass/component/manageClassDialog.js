@@ -110,9 +110,9 @@ function ManageClassDiaglog(props) {
     status: 1,
   });
   React.useEffect(() => {
-    if (el?.id != null && el?.id != undefined) {
-      fetchStudent(setStudentData, setAddedStudent, search, el?.id);
-    }
+    // if (el?.id != null && el?.id != undefined) {
+    fetchStudent(setStudentData, setAddedStudent, search, el?.id);
+    // }
   }, [el?.id]);
 
   React.useEffect(() => {
