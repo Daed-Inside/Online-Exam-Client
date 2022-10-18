@@ -11,6 +11,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SentimentVerySatisfiedOutlinedIcon from "@mui/icons-material/SentimentVerySatisfiedOutlined";
 import MoodBadOutlinedIcon from "@mui/icons-material/MoodBadOutlined";
+import WarningIcon from "@mui/icons-material/Warning";
 import Button from "@mui/material/Button";
 import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
@@ -149,6 +150,85 @@ export function SubmitDialog({ children, ...props }) {
             {msg}
           </DialogTitle>
         </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+export function DeleteDialog({ children, ...props }) {
+  const { open, setOpen, warningMsg, deleteFunc, id, setReloadToggle } = props;
+  const [dialogObj, setDialogObj] = useState({
+    open: false,
+    msg: "OK",
+    status: 1,
+  });
+  return (
+    <div>
+      <Dialog
+        open={open}
+        keepMounted
+        fullWidth={true}
+        maxWidth={"md"}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle sx={{ fontSize: "20px", textAlign: "center" }}>
+          {"Warning"}
+        </DialogTitle>
+        <div style={{ textAlign: "center" }}>
+          <WarningIcon sx={{ fontSize: 100, color: "red" }} className="icon" />
+        </div>
+        <DialogTitle sx={{ fontSize: "20px", textAlign: "center" }}>
+          {warningMsg}
+        </DialogTitle>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div
+            style={{
+              flex: 1,
+              marginBottom: "10px",
+              marginRight: "5px",
+              textAlign: "center",
+            }}
+          >
+            <Button
+              sx={{ width: "60%" }}
+              variant="contained"
+              onClick={async () => {
+                setOpen({
+                  open: false,
+                  id: null,
+                });
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+          <div
+            style={{
+              flex: 1,
+              marginBottom: "10px",
+              textAlign: "center",
+            }}
+          >
+            <Button
+              sx={{ width: "60%" }}
+              variant="contained"
+              onClick={() => {
+                setOpen({
+                  open: false,
+                  id: null,
+                });
+                deleteFunc(id, setDialogObj, setReloadToggle);
+              }}
+            >
+              Accept
+            </Button>
+          </div>
+        </div>
+        <ApiStatusDialog
+          msg={dialogObj.msg}
+          open={dialogObj.open}
+          status={dialogObj.status}
+        />
       </Dialog>
     </div>
   );

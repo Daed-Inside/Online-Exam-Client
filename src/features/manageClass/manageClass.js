@@ -19,13 +19,20 @@ import { EnhancedTableHead } from "../../components/table/Header";
 import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
 import ManageClassDiaglog from "./component/manageClassDialog";
+import { DeleteDialog } from "../../components/dialog/dialog";
 import "./manageClass.css";
 import { ManageClassHeader, SampleManageClass } from "./manageClassConfig";
 import Pagination from "@mui/material/Pagination";
 import moment from "moment";
 
 // * fetch class info api
-function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
+function fetchData(
+  setTableData,
+  pagingObj,
+  setPagingObj,
+  setEmptyRow,
+  setReloadToggle
+) {
   axios
     .get(`${constant.BASEURL}/core/class`, {
       headers: {
@@ -45,10 +52,8 @@ function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
         });
         const emptyRows = pagingObj.limit - res.data.data.results.length;
         setEmptyRow(emptyRows);
+        setReloadToggle(false);
       });
-      // setTimeout(() => {
-      //   alert("Login success");
-      // }, 400);
     })
     .catch((error) => {
       console.log(error);
@@ -58,13 +63,58 @@ function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
     });
 }
 
+function handleDelete(id, setDialogObj, setReloadToggle) {
+  axios
+    .delete(`${constant.BASEURL}/core/class/${id}`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
+    .then((res) => {
+      handleApi(res, (e) => {
+        setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
+        setTimeout(() => {
+          setDialogObj({
+            open: false,
+            msg: res.data.message,
+            status: 1,
+          });
+          setReloadToggle(true);
+        }, 2000);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      setDialogObj({
+        open: true,
+        msg: "System error",
+        status: 2,
+      });
+      setTimeout(() => {
+        setDialogObj({
+          open: false,
+          msg: "System error",
+          status: 2,
+        });
+      }, 2000);
+    });
+}
+
 // * main render function
 export default function ManageClass() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("id");
-  const [dense, setDense] = React.useState(false);
   const [emptyRow, setEmptyRow] = useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [reloadToggle, setReloadToggle] = useState(false);
+  const [delDialogStatus, setDelDialogStatus] = useState({
+    open: false,
+    id: null,
+  });
   const [tableData, setTableData] = useState([]);
   const [dialogStatus, setDialogStatus] = useState({
     open: false,
@@ -80,13 +130,31 @@ export default function ManageClass() {
     sort_type: "ASC",
   });
 
-  useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
-  }, []);
+  // useEffect(() => {
+  //   fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
+  // }, []);
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
+    fetchData(
+      setTableData,
+      pagingObj,
+      setPagingObj,
+      setEmptyRow,
+      setReloadToggle
+    );
   }, [pagingObj.search, pagingObj.page, pagingObj.limit]);
+
+  useEffect(() => {
+    if (reloadToggle === true) {
+      fetchData(
+        setTableData,
+        pagingObj,
+        setPagingObj,
+        setEmptyRow,
+        setReloadToggle
+      );
+    }
+  }, [reloadToggle]);
 
   function handleSearch(search_str) {
     const delayDebounceFn = setTimeout(() => {
@@ -157,13 +225,17 @@ export default function ManageClass() {
                  rows.slice().sort(getComparator(order, orderBy)) */}
                     {tableData.map((row, index) => {
                       return (
-                        <BodyItem row={row} editDialog={setDialogStatus} />
+                        <BodyItem
+                          row={row}
+                          editDialog={setDialogStatus}
+                          setDelDialogStatus={setDelDialogStatus}
+                        />
                       );
                     })}
                     {emptyRow > 0 && (
                       <TableRow
                         style={{
-                          height: (dense ? 33 : 53) * emptyRow,
+                          height: (false ? 33 : 53) * emptyRow,
                         }}
                       >
                         <TableCell colSpan={6} />
@@ -200,7 +272,18 @@ export default function ManageClass() {
       <ManageClassDiaglog
         open={dialogStatus.open}
         setOpen={setDialogStatus}
+        setReloadToggle={setReloadToggle}
         el={dialogStatus.el}
+      />
+      <DeleteDialog
+        warningMsg={
+          "Delete this class will remove this class from template has it assigned"
+        }
+        open={delDialogStatus.open}
+        setOpen={setDelDialogStatus}
+        deleteFunc={handleDelete}
+        setReloadToggle={setReloadToggle}
+        id={delDialogStatus.id}
       />
     </>
   );
@@ -208,7 +291,7 @@ export default function ManageClass() {
 
 const BodyItem = (props) => {
   const [open, setOpen] = useState(false);
-  const { row, editDialog } = props;
+  const { row, editDialog, setDelDialogStatus } = props;
   return (
     <TableRow hover key={row.id}>
       <TableCell component="th" scope="row" padding="normal" align="center">
@@ -226,10 +309,16 @@ const BodyItem = (props) => {
           onClick={() => editDialog({ el: row, open: true })}
           className="icon"
         />
-        <DeleteIcon onClick={() => handleDelete(row.id)} className="icon" />
+        <DeleteIcon
+          onClick={() =>
+            setDelDialogStatus({
+              open: true,
+              id: row.id,
+            })
+          }
+          className="icon"
+        />
       </TableCell>
     </TableRow>
   );
 };
-
-function handleDelete(id) {}

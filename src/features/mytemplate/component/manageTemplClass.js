@@ -42,7 +42,13 @@ function fetchClass(setClassData, setAddedClassData, template_id, search) {
     });
 }
 
-function addClassTemplate(reqBody, setDialogObj, setOpen, setSearch) {
+function addClassTemplate(
+  reqBody,
+  setDialogObj,
+  setOpen,
+  setSearch,
+  setReloadToggle
+) {
   axios
     .post(`${constant.BASEURL}/core/exam-template-class`, reqBody, {
       headers: {
@@ -65,6 +71,7 @@ function addClassTemplate(reqBody, setDialogObj, setOpen, setSearch) {
           });
           setOpen(false);
           setSearch(null);
+          setReloadToggle(true);
         }, 2000);
       });
     })
@@ -86,7 +93,7 @@ function addClassTemplate(reqBody, setDialogObj, setOpen, setSearch) {
 }
 
 function AddTemplateClassDialog(props) {
-  const { template_id, open, setOpen } = props;
+  const { template_id, open, setOpen, setReloadToggle } = props;
   const [classData, setClassData] = React.useState([]);
   const [addedClassData, setAddedClassData] = React.useState([]);
   const [search, setSearch] = React.useState(null);
@@ -132,7 +139,13 @@ function AddTemplateClassDialog(props) {
               exam_template_id: values.template_id,
               class_ids: classIds,
             };
-            addClassTemplate(reqBody, setDialogObj, setOpen, setSearch);
+            addClassTemplate(
+              reqBody,
+              setDialogObj,
+              setOpen,
+              setSearch,
+              setReloadToggle
+            );
           }}
         >
           {({

@@ -48,7 +48,13 @@ function fetchStudent(setStudentData, setAddedStudent, search, class_id) {
     });
 }
 
-function createClass(values, setDialogObj, setOpen, setSearch) {
+function createClass(
+  values,
+  setDialogObj,
+  setOpen,
+  setSearch,
+  setReloadToggle
+) {
   axios
     .post(
       `${constant.BASEURL}/core/class`,
@@ -79,6 +85,7 @@ function createClass(values, setDialogObj, setOpen, setSearch) {
           });
           setOpen(false);
           setSearch(null);
+          setReloadToggle(true);
         }, 2000);
       });
     })
@@ -100,7 +107,7 @@ function createClass(values, setDialogObj, setOpen, setSearch) {
 }
 
 function ManageClassDiaglog(props) {
-  const { el, open, setOpen } = props;
+  const { el, open, setOpen, setReloadToggle } = props;
   const [studentData, setStudentData] = React.useState([]);
   const [addedStudent, setAddedStudent] = React.useState([]);
   const [search, setSearch] = React.useState(null);
@@ -142,7 +149,13 @@ function ManageClassDiaglog(props) {
           onSubmit={(values, { setSubmitting }) => {
             let newValue = { ...values };
             newValue.class_id = el?.id;
-            createClass(newValue, setDialogObj, setOpen, setSearch);
+            createClass(
+              newValue,
+              setDialogObj,
+              setOpen,
+              setSearch,
+              setReloadToggle
+            );
           }}
         >
           {({

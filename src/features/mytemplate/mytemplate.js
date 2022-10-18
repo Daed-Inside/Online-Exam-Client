@@ -21,10 +21,17 @@ import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
 import { myTemplateHeader, SampleMyTest } from "../../constants/sample";
 import AddTemplateClassDiaglog from "./component/manageTemplClass";
+import { DeleteDialog } from "../../components/dialog/dialog";
 import moment from "moment";
 import "./mytemplate.css";
 
-function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
+function fetchData(
+  setTableData,
+  pagingObj,
+  setPagingObj,
+  setEmptyRow,
+  setReloadToggle
+) {
   axios
     .get(`${constant.BASEURL}/core/exam-template`, {
       headers: {
@@ -44,10 +51,8 @@ function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
         });
         const emptyRows = pagingObj.limit - res.data.data.results.length;
         setEmptyRow(emptyRows);
+        setReloadToggle(false);
       });
-      // setTimeout(() => {
-      //   alert("Login success");
-      // }, 400);
     })
     .catch((error) => {
       console.log(error);
@@ -57,12 +62,59 @@ function fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow) {
     });
 }
 
+function handleDelete(id, setDialogObj, setReloadToggle) {
+  axios
+    .delete(`${constant.BASEURL}/core/exam-template/${id}`, {
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem(constant.localStorage.TOKEN),
+      },
+    })
+    .then((res) => {
+      handleApi(res, (e) => {
+        setDialogObj({
+          open: true,
+          msg: res.data.message,
+          status: 1,
+        });
+        setTimeout(() => {
+          setDialogObj({
+            open: false,
+            msg: res.data.message,
+            status: 1,
+          });
+          setReloadToggle(true);
+        }, 2000);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      setDialogObj({
+        open: true,
+        msg: "System error",
+        status: 2,
+      });
+      setTimeout(() => {
+        setDialogObj({
+          open: false,
+          msg: "System error",
+          status: 2,
+        });
+      }, 2000);
+    });
+}
+
 export default function MyTemplate() {
   const navigate = useNavigate();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("id");
   const [emptyRow, setEmptyRow] = useState(0);
+  const [reloadToggle, setReloadToggle] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [delDialogStatus, setDelDialogStatus] = useState({
+    open: false,
+    id: null,
+  });
   const [dialogStatus, setDialogStatus] = useState({
     open: false,
     template_id: null,
@@ -77,13 +129,31 @@ export default function MyTemplate() {
     sort_type: "ASC",
   });
   const dense = false;
-  useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
-  }, []);
+  // useEffect(() => {
+  //   fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
+  // }, []);
 
   useEffect(() => {
-    fetchData(setTableData, pagingObj, setPagingObj, setEmptyRow);
+    fetchData(
+      setTableData,
+      pagingObj,
+      setPagingObj,
+      setEmptyRow,
+      setReloadToggle
+    );
   }, [pagingObj.search, pagingObj.page, pagingObj.search]);
+
+  useEffect(() => {
+    if (reloadToggle === true) {
+      fetchData(
+        setTableData,
+        pagingObj,
+        setPagingObj,
+        setEmptyRow,
+        setReloadToggle
+      );
+    }
+  }, [reloadToggle]);
 
   function handleSearch(searchStr) {
     const delayDebounceFn = setTimeout(() => {
@@ -189,7 +259,12 @@ export default function MyTemplate() {
                               className="icon"
                             />
                             <DeleteIcon
-                              // onClick={() => handleDelete(row.id)}
+                              onClick={() =>
+                                setDelDialogStatus({
+                                  open: true,
+                                  id: row.id,
+                                })
+                              }
                               className="icon"
                             />
                           </TableCell>
@@ -226,9 +301,9 @@ export default function MyTemplate() {
                 <Pagination
                   count={pagingObj.totalPages}
                   page={pagingObj.page}
-                  onChange={(e, value) =>
-                    setPagingObj({ ...pagingObj, page: value })
-                  }
+                  onChange={(e, value) => {
+                    setPagingObj({ ...pagingObj, page: value });
+                  }}
                 />
               </div>
             </div>
@@ -238,7 +313,16 @@ export default function MyTemplate() {
       <AddTemplateClassDiaglog
         template_id={dialogStatus.template_id}
         open={dialogStatus.open}
+        setReloadToggle={setReloadToggle}
         setOpen={setDialogStatus}
+      />
+      <DeleteDialog
+        warningMsg={"Delete this template will delete all results belong to it"}
+        open={delDialogStatus.open}
+        setOpen={setDelDialogStatus}
+        setReloadToggle={setReloadToggle}
+        deleteFunc={handleDelete}
+        id={delDialogStatus.id}
       />
     </>
   );
