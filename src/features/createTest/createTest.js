@@ -76,7 +76,7 @@ function createTestAPI(reqBody, setDialogObj) {
     });
 }
 
-function fetchEditTemplate(id, setFormData) {
+function fetchEditTemplate(id, setFormData, is_new) {
   axios
     .get(`${constant.BASEURL}/core/exam-template/${id}`, {
       headers: {
@@ -86,7 +86,11 @@ function fetchEditTemplate(id, setFormData) {
     })
     .then((res) => {
       handleApi(res, (e) => {
-        setFormData(res.data.data);
+        let formData = { ...res.data.data };
+        if (is_new) {
+          formData.name = formData.name + " Clone";
+        }
+        setFormData(formData);
       });
     })
     .catch((error) => {
@@ -149,16 +153,16 @@ function CreateTest(props) {
     status: 1,
   });
   const { id } = useParams();
+  const { is_new } = props;
   // const id = 3
   useEffect(() => {
     if (id && id !== "null") {
-      setIsEdit(true);
-      fetchEditTemplate(id, setFormData);
-      fetchSubject(setSubject);
-    } else {
-      setIsEdit(false);
-      fetchSubject(setSubject);
+      fetchEditTemplate(id, setFormData, is_new);
     }
+    if (is_new === false) {
+      setIsEdit(true);
+    }
+    fetchSubject(setSubject);
   }, []);
 
   return (

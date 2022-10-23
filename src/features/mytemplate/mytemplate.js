@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 import InputAdornment from "@mui/material/InputAdornment";
 import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
@@ -125,8 +126,8 @@ export default function MyTemplate() {
     search: "",
     totalElements: 0,
     totalPages: 0,
-    sort_by: "id",
-    sort_type: "ASC",
+    sort_by: "created_date",
+    sort_type: "DESC",
   });
   const dense = false;
   // useEffect(() => {
@@ -264,6 +265,12 @@ export default function MyTemplate() {
                                   open: true,
                                   id: row.id,
                                 })
+                              }
+                              className="icon"
+                            />
+                            <FileCopyIcon
+                              onClick={(e) =>
+                                navigate(`/template/clone/${row.id}`)
                               }
                               className="icon"
                             />

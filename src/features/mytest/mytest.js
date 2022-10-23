@@ -80,8 +80,8 @@ export default function MyTest() {
     search: "",
     totalElements: 0,
     totalPages: 0,
-    sort_by: "id",
-    sort_type: "ASC",
+    sort_by: "created_date",
+    sort_type: "DESC",
     tab: "COMPLETED",
   });
 
@@ -210,6 +210,9 @@ export default function MyTest() {
                                 <TableCell align="center">
                                   {row.score}
                                 </TableCell>
+                                <TableCell align="center">
+                                  {row.actual_checked}/{row.expected_checked}
+                                </TableCell>
                               </TableRow>
                             );
                           })}
@@ -219,7 +222,7 @@ export default function MyTest() {
                                 height: (dense ? 33 : 53) * emptyRow,
                               }}
                             >
-                              <TableCell colSpan={6} />
+                              <TableCell colSpan={7} />
                             </TableRow>
                           )}
                         </TableBody>
@@ -415,6 +418,9 @@ export default function MyTest() {
                               )}
                             </TableCell>
                             <TableCell align="center">{row.score}</TableCell>
+                            <TableCell align="center">
+                              {row.actual_checked}/{row.expected_checked}
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -424,7 +430,7 @@ export default function MyTest() {
                             height: (dense ? 33 : 53) * emptyRow,
                           }}
                         >
-                          <TableCell colSpan={6} />
+                          <TableCell colSpan={7} />
                         </TableRow>
                       )}
                     </TableBody>

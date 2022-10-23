@@ -45,8 +45,21 @@ function Routings({ children, ...renderProps }) {
         <AdminRouting>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/personal-info" element={<Personal />} />
-          <Route exact path="/template/create" element={<CreateTest />} />
-          <Route exact path="/template/edit/:id" element={<CreateTest />} />
+          <Route
+            exact
+            path="/template/create"
+            element={<CreateTest is_new={true} />}
+          />
+          <Route
+            exact
+            path="/template/edit/:id"
+            element={<CreateTest is_new={false} />}
+          />
+          <Route
+            exact
+            path="/template/clone/:id"
+            element={<CreateTest is_new={true} />}
+          />
           <Route exact path="/manage/template" element={<MyTemplate />} />
           <Route path="/test/conduct/:id" element={<DoTest />} />
           <Route path="/manage/test" element={<MyTest />} />

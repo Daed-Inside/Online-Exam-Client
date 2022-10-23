@@ -15,7 +15,7 @@ export const SampleHeader = [
     isSort: true,
     disablePadding: false,
     label: "Name",
-    width: "30%",
+    width: "25%",
   },
   {
     id: "subject",
@@ -24,7 +24,7 @@ export const SampleHeader = [
     isSort: false,
     disablePadding: false,
     label: "Subject",
-    width: "15%",
+    width: "10%",
   },
   {
     id: "lecturer",
@@ -53,6 +53,15 @@ export const SampleHeader = [
     label: "Score",
     width: "10%",
   },
+  {
+    id: "overall",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Overall",
+    width: "10%",
+  },
 ];
 
 export const LecturerHeader = [
@@ -72,7 +81,7 @@ export const LecturerHeader = [
     isSort: true,
     disablePadding: false,
     label: "Name",
-    width: "30%",
+    width: "25%",
   },
   {
     id: "subject",
@@ -81,7 +90,7 @@ export const LecturerHeader = [
     isSort: false,
     disablePadding: false,
     label: "Subject",
-    width: "15%",
+    width: "10%",
   },
   {
     id: "student",
@@ -108,6 +117,15 @@ export const LecturerHeader = [
     isSort: false,
     disablePadding: false,
     label: "Score",
+    width: "10%",
+  },
+  {
+    id: "overall",
+    middle: true,
+    numeric: false,
+    isSort: false,
+    disablePadding: false,
+    label: "Overall",
     width: "10%",
   },
 ];
