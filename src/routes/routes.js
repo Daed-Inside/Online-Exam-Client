@@ -16,6 +16,7 @@ import Personal from "../features/personal/personal";
 import CreateTest from "../features/createTest/createTest";
 import ManageClass from "../features/manageClass/manageClass";
 import DoTest from "../features/doTest/doTest";
+import Overview from "../features/resultOverview/overview";
 import Dashboard from "../features/dashboard/dashboard";
 import constant from "../constants/constant";
 import * as React from "react";
@@ -60,6 +61,7 @@ function Routings({ children, ...renderProps }) {
             path="/template/clone/:id"
             element={<CreateTest is_new={true} />}
           />
+          <Route path="/test/result/overview/:id" element={<Overview />} />
           <Route exact path="/manage/template" element={<MyTemplate />} />
           <Route path="/test/conduct/:id" element={<DoTest />} />
           <Route path="/manage/test" element={<MyTest />} />

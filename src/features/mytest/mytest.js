@@ -19,6 +19,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EnhancedTableHead } from "../../components/table/Header";
 import { handleApi } from "../../components/utils/utils";
 import constant from "../../constants/constant";
@@ -191,7 +192,12 @@ export default function MyTest() {
                                   align="left"
                                   className="word-break-cell"
                                 >
-                                  {row.name}
+                                  <Link
+                                    className="nav_link_text"
+                                    to={`/test/result/overview/${row.id}`}
+                                  >
+                                    {row.name}
+                                  </Link>
                                 </TableCell>
                                 <TableCell align="left">
                                   {row.subject}
@@ -406,7 +412,12 @@ export default function MyTest() {
                               {row.id}
                             </TableCell>
                             <TableCell align="left" className="word-break-cell">
-                              {row.name}
+                              <Link
+                                className="nav_link_text"
+                                to={`/test/result/overview/${row.id}`}
+                              >
+                                {row.name}
+                              </Link>
                             </TableCell>
                             <TableCell align="left">{row.subject}</TableCell>
                             <TableCell align="left" className="word-break-cell">
