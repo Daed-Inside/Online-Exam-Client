@@ -3,6 +3,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Box from "@mui/material/Box";
+import { useParams } from "react-router";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -75,6 +76,7 @@ export default function MyTest() {
   const [emptyRow, setEmptyRow] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [permission, setPermission] = React.useState(-1);
+  const { id } = useParams();
   const [pagingObj, setPagingObj] = useState({
     page: 1,
     limit: 7,
@@ -84,6 +86,7 @@ export default function MyTest() {
     sort_by: "created_date",
     sort_type: "DESC",
     tab: "COMPLETED",
+    id: id,
   });
 
   useEffect(() => {

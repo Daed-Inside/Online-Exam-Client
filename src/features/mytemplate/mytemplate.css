@@ -82,3 +82,8 @@
   margin-top: 10px;
   margin-left: 10px;
 }
+
+.nav_link_text {
+  color: blue;
+  font-size: 13px;
+}

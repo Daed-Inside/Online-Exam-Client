@@ -65,6 +65,7 @@ function Routings({ children, ...renderProps }) {
           <Route exact path="/manage/template" element={<MyTemplate />} />
           <Route path="/test/conduct/:id" element={<DoTest />} />
           <Route path="/manage/test" element={<MyTest />} />
+          <Route path="/test/result/:id" element={<MyTest />} />
           <Route path="/manage/class" element={<ManageClass />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </AdminRouting>

@@ -5,6 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import InputAdornment from "@mui/material/InputAdornment";
+import { Link } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -229,7 +230,12 @@ export default function MyTemplate() {
                             {row.id}
                           </TableCell>
                           <TableCell align="left" className="word-break-cell">
-                            {row.name}
+                            <Link
+                              className="nav_link_text"
+                              to={`/test/result/${row.id}`}
+                            >
+                              {row.name}
+                            </Link>
                           </TableCell>
                           <TableCell align="left">{row.subject_name}</TableCell>
                           <TableCell align="left">{row.duration} Min</TableCell>
